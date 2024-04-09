@@ -13,9 +13,10 @@ class PropretyController extends Controller
 {
     public function get()
 {
-    $properties= Proprety::get();
+    $properties = Proprety::with('images')->get();
     return view('proprety.proprety', compact('properties'));
 }
+
     public function create()
 {
     $categories = Category::all();
@@ -68,6 +69,6 @@ public function add(Request $request)
             }
         }
 
-        return redirect()->route('properties');
+        return redirect()->route('properties.index');
     }
 }

@@ -13,11 +13,16 @@ class CheckSession
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)    
     {
         // Check if session variable exists and is true
         if (!session('authenticated')) {
             return redirect('/login')->with('error', 'Unauthorized access');
+        }
+
+        // Check if user is not authenticated
+        if (!$request->user()) {
+            return redirect('/login')->with('error', 'Please log in');
         }
         
         return $next($request);

@@ -33,19 +33,23 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Profile</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                {{-- <a href="testimonial.html" class="dropdown-item">@auth {{ Auth::user()->name }} @endauth</a>
-                                <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">LOGOUT</a>
                                 @auth
+                                    <a href="#" class="dropdown-item">{{ auth()->user()->name }}</a>
+                                    <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-                                @endauth --}}
+                                @else
+                                    <a href="{{ route('login') }}" class="dropdown-item">Login</a>
+                                    <a href="{{ route('register') }}" class="dropdown-item">Register</a>
+                                @endauth
                             </div>
                         </div>
                         
+                        
 
                     </div>
-                    <a href="{{route('createpropreties')}}" class="btn btn-primary px-3 d-none d-lg-flex">Add Property</a>
+                    <a href="{{route('createproperties')}}" class="btn btn-primary px-3 d-none d-lg-flex">Add Property</a>
                 </div>
             </nav>
         </div>
