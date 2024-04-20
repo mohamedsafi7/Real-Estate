@@ -19,7 +19,7 @@ Route::post('/login', [UserController::class, 'loginUser']);
 
 // Logout route
 Route::post('/logout', [UserController::class, 'logoutUser'])->middleware(['auth:sanctum'])->name('logout');
-
+ 
 // Home route
 Route::get('/', [HomeController::class, 'get'])->name('index')->middleware('auth');
 
