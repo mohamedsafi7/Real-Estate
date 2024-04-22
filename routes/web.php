@@ -27,6 +27,6 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
     // Properties
     Route::get('/properties', [PropretyController::class, 'get'])->name('properties.index');
     Route::get('/createproperties', [PropretyController::class, 'create'])->name('createproperties');
-    Route::post('/createproperties', [PropretyController::class, 'add'])->name('addproperty');
+    Route::post('/createpropertie', [PropretyController::class, 'add'])->name('addproperty');
 });
 
