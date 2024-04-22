@@ -30,3 +30,5 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
     Route::post('/createproperties', [PropretyController::class, 'add'])->name('addproperty');
 });
 
+
+
