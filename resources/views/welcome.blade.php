@@ -40,11 +40,11 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <select class="form-select border-0 py-3" >
+                                        <select class="form-select border-0 py-3" name="location_filter" id="location_filter">
                                             <option selected>Location</option>
-                                            <option value="1">Location 1</option>
-                                            <option value="2">Location 2</option>
-                                            <option value="3">Location 3</option>
+                                            @foreach ($listings as $property)
+                                            <option>{{  $property->city}}</option>
+                                        @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -116,7 +116,7 @@
             
             
                     <div class="container">
-                        <div class="row">
+                        <div class="row" enctype="multipart/form-data">
                             @foreach ($listings as $property)
                             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                                 <div class="property-item rounded overflow-hidden">
