@@ -75,6 +75,8 @@ public function add(Request $request)
 
     public function edit( string $id){
         $property = Proprety::FindOrFail($id);
+        $category = Category::all();
+
         return view('proprety.editProperty',compact('property'));
     }
 
@@ -84,7 +86,7 @@ public function add(Request $request)
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp', 
         ]);
         $property->update($request->all());
-        return redirect()->route('properties.index'); 
+        return redirect()->route('profile'); 
         
     }
 
