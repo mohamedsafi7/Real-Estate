@@ -85,7 +85,6 @@ class UserController extends Controller
             return redirect('/login')->with('error', $th->getMessage())->withInput();
         }
     }
-    
 /**
  * Logout the authenticated user.
  *
@@ -119,6 +118,7 @@ public function logoutUser(Request $request)
         ]);
     }
 }
+
 
 
 }

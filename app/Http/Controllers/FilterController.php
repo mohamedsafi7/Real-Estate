@@ -26,6 +26,7 @@ public function show(Request $request)
 {
     // Récupérer toutes les propriétés avec leurs images
     $properties = Proprety::with('images');
+    $query = Proprety::query();
 
     // Récupérer toutes les catégories
     $categories = Category::all();
@@ -36,6 +37,12 @@ public function show(Request $request)
         $properties->whereHas('category', function ($query) use ($categoryName) {
             $query->where('name', $categoryName);
         });
+    }
+    if ($request->filled('location_filter')) {
+        $locationName = $request->input('location_filter');
+
+            $query->where('name', $locationName);
+       
     }
 
     // Récupérer les propriétés filtrées
