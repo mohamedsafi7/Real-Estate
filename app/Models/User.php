@@ -11,6 +11,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public const ROLE_USER = 'user';
+    public const ROLE_ADMIN = 'admin';
     /**
      * The attributes that are mass assignable.
      *
@@ -46,6 +48,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+        /**
+     * Check if the user is an admin.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+    
     public function properties()
     {
         return $this->hasMany(Proprety::class);

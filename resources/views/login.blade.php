@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
 <body>
-    <form class="form_container" method="POST" >
+    <form class="form_container" method="POST"  >
         @csrf
         <div class="logo_container"><img src="logoWykee.png" alt="" class="logo_container"></div>
         <div class="title_container">

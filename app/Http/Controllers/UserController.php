@@ -64,27 +64,29 @@ class UserController extends Controller
     {
         return view('login');
     }
-
-    /**
-     * Login a user.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function loginUser(Request $request)
-    {
-        try {
-            if (!Auth::attempt($request->only('email', 'password'))) {
-                return redirect('/login')->with('error', 'Invalid credentials')->withInput();
-            }
-            
-            session(['authenticated' => true]);
-            
-            return redirect()->intended('/');
-        } catch (\Throwable $th) {
-            return redirect('/login')->with('error', $th->getMessage())->withInput();
+/**
+ * Login a user.
+ *
+ * @param Request $request
+ * @return \Illuminate\Http\RedirectResponse
+ */
+public function loginUser(Request $request)
+{
+    try {
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return redirect('/login')->with('error', 'Invalid credentials')->withInput();
         }
+        
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('dashboard');
+        } else {
+            return redirect('/');
+        }
+    } catch (\Throwable $th) {
+        return redirect('/login')->with('error', $th->getMessage())->withInput();
     }
+}
+
 /**
  * Logout the authenticated user.
  *
@@ -118,6 +120,17 @@ public function logoutUser(Request $request)
         ]);
     }
 }
+public function dashboard()
+{
+    if (Auth::user()->role === 'admin') {
+        // If user is admin, return the admin view
+        return view('admin.admin');
+    } else {
+        // If user is not admin, return home or any other appropriate view
+        return redirect('/');
+    }
+}
+
 
 
 

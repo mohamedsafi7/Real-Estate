@@ -16,6 +16,7 @@ Route::post('/register', [UserController::class, 'registerUser']);
 Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [UserController::class, 'loginUser']);
 
+Route::get('/admin', [UserController::class, 'dashboard'])->name('dashboard')->middleware('auth');
 
 // Logout route
 Route::post('/logout', [UserController::class, 'logoutUser'])->middleware(['auth:sanctum'])->name('logout');
@@ -36,6 +37,7 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
     // Properties
     Route::get('/properties', [PropretyController::class, 'get'])->name('properties.index');
     Route::get('/createproperties', [PropretyController::class, 'create'])->name('createproperties');
+    Route::post('/addprop', [PropretyController::class, 'add'])->name('addproperty');
     Route::get('/editproperties/{id}', [PropretyController::class, 'edit'])->name('editproperty');
     Route::put('/updateproperties/{id}', [PropretyController::class, 'update'])->name('updateproperty');
     Route::delete('/deleteproperties/{id}', [PropretyController::class, 'destroy'])->name('deleteproperty');

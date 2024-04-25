@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <div class="container" enctype="multipart/form-data">
     <div class="row justify-content-center">
         <div class="col-lg-3 col-md-6 wow fadeInUp mb-4" data-wow-delay="0.3s">
@@ -21,7 +22,8 @@
                     @auth
                     <h5 class="fw-bold mb-0">{{ auth()->user()->name }}</h5>
                     <small>{{ auth()->user()->email }}</small>
-                    <a href="{{ route('profile.edit',  $user->id) }}">Edit Profile</a>
+                    <a href="{{ route('profile.edit', $user->id) }}"><i class="fas fa-pen"></i></a>
+
                     @endauth
                 </div>
             </div>
@@ -47,22 +49,37 @@
                     <h5 class="text-primary mb-3">${{ $pub->price }}</h5>
                     <a class="d-block h5 mb-2" href="">{{ $pub->name }}</a>
                     <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $pub->address }}</p>
+                    
+                    <div class="d-flex justify-content-end mt-2">
+                        <div>
+                            <form action="{{ route('deleteproperty', $pub->id) }}" method="POST">
+                                @method('delete')
+                                @csrf
+                                <button type="submit" class="btn btn-link p-1"><i class="fas fa-trash mr-2"></i></button>
+                            </form>
+                        </div>
+                        <div>
+                            <a href="{{ route('editproperty', $pub->id) }}"><i class="fas fa-pen"></i></a>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="d-flex border-top">
                     <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $pub->size }} Sqft</small>
                     <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{ $pub->bedrooms }} Bed</small>
                     <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{ $pub->bathrooms }} Bath</small>
                 </div>
-                <a href="{{route('editproperty',$pub->id)}}"> edit</a>
+                {{-- <a href="{{route('editproperty',$pub->id)}}"><i class="fas fa-pen"></i> </a> --}}
 
                 
                 
                 
-                <form action="{{route('deleteproperty',$pub->id)}}" method="POST">
+                {{-- <form action="{{ route('deleteproperty', $pub->id) }}" method="POST">
                     @method('delete')
                     @csrf
-                    <button type="submit">delete</button>
-                </form>
+                    <button type="submit" class="btn btn-link p-0"><i class="fas fa-trash"></i></button>
+                </form> --}}
+                
             </div>
         </div>
         @endforeach
