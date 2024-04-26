@@ -1,4 +1,6 @@
         <!-- Navbar Start -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
         <div class="container-fluid nav-bar bg-transparent">
             <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
                 <a href="{{ route('index') }}" class="navbar-brand d-flex align-items-center text-center">
@@ -34,8 +36,15 @@
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Profile</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 @auth
-                                    <a href="profile" class="dropdown-item">{{ auth()->user()->name }}</a>
-                                    <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                    <a href="profile" class="dropdown-item"><i class="fa-regular fa-user"></i>&nbsp;&nbsp;&nbsp{{ auth()->user()->name }}</a> 
+                                    
+                                    
+                                    
+                                    <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="fal fa-arrow-alt-circle-right"></i>
+                                        Logout
+                                    </a>
+                                    
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
