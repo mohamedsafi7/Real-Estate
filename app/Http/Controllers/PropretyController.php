@@ -12,10 +12,16 @@ use Illuminate\Support\Facades\Auth;
 class PropretyController extends Controller
 {
     public function get()
-{
-    $properties = Proprety::with('images')->get();
-    return view('proprety.proprety', compact('properties'));
-}
+    {
+        $properties = Proprety::with('images')->get();
+    
+        // Loop through properties and keep only the first image
+        $properties->each(function ($property) {
+            $property->first_image = $property->images->isNotEmpty() ? $property->images->first()->image_path : null;
+        });
+    
+        return view('proprety.proprety', compact('properties'));
+    }
 
     public function create()
 {

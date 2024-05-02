@@ -13,10 +13,9 @@
                     <div class="bg-warning rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Rent</div>
                     @endif
                     <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $property->category->name }}</div>
-                    @foreach ($property->images as $image)
-                        <a href=""><img class="img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt=""></a>
-
-                    @endforeach
+                    @if ($property->images->count() > 0)
+                        <a href=""><img class="img-fluid" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
+                    @endif
                 </div>
                 <div class="p-4 pb-0">
                     <h5 class="text-primary mb-3">${{ $property->price }}</h5>

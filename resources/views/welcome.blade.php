@@ -14,7 +14,7 @@
                 <div class="col-md-6 animated fadeIn">
                     <div class="owl-carousel header-carousel">
                         <div class="owl-carousel-item">
-                            <img class="img-fluid" src="img/carousel-1.jpg" alt="">
+                            <img class="" src="{{ asset('img/carousel-1.jpg') }}" alt="">
                         </div>
 
                     </div>
@@ -67,30 +67,7 @@
                     <!-- Spinner End -->
 
                     <!-- Category Start -->
-<div class="container-xxl py-5">
-    <div class="container">
-        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3">Property Types</h1>
-            <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
-        </div>
-        <div class="row g-4">
-            @foreach ($categories as $category)
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.{{ $loop->iteration }}s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{{ route('categories.show', $category->id) }}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="img/{{ $category->name }}.png" alt="Icon">
-                        </div>
-                        <h6>{{ $category->name }}</h6>
-                        <span>{{ $category->properties_count }} Properties</span>
-                    </div>
-                </a>
-            </div>
-        @endforeach
-        
-        </div>
-    </div>
-</div>
+
 <!-- Category End -->
             
                     <!-- About Start -->
@@ -99,7 +76,7 @@
                             <div class="row g-5 align-items-center">
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="about-img position-relative overflow-hidden p-5 pe-0">
-                                        <img class="img-fluid w-100" src="img/about.jpg">
+                                        <img class="img-fluid w-100" src="{{ asset('img/about.jpg') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
@@ -118,7 +95,7 @@
             
                     <div class="container">
                         <div class="row" enctype="multipart/form-data">
-                            @foreach ($listings as $property)
+                            @foreach ($properties as $property)
                             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                                 <div class="property-item rounded overflow-hidden">
                                     <div class="position-relative overflow-hidden">
@@ -128,10 +105,10 @@
                                         <div class="bg-warning rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Rent</div>
                                         @endif
                                         <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $property->category->name }}</div>
-                                        @foreach ($property->images as $image)
-                                            <a href=""><img class="img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt=""></a>
-                    
-                                        @endforeach
+                                        @if ($property->images->count() > 0)
+                                        <a href=""><img class="img-fluid" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
+                                        @endif
+                                    
                                     </div>
                                     <div class="p-4 pb-0">
                                         <h5 class="text-primary mb-3">${{ $property->price }}</h5>
@@ -162,7 +139,7 @@
                                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                                     <div class="team-item rounded overflow-hidden">
                                         <div class="position-relative">
-                                            <img class="img-fluid" src="img/team-1.jpg" alt="">
+                                            <img class="img-fluid" src="{{ asset('img/team-1.jpg') }}" alt="">
                                             <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
                                                 <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
                                                 <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
@@ -178,7 +155,7 @@
                                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                                     <div class="team-item rounded overflow-hidden">
                                         <div class="position-relative">
-                                            <img class="img-fluid" src="img/team-2.jpg" alt="">
+                                            <img class="img-fluid" src="{{ asset('img/team-2.jpg') }}" alt="">
                                             <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
                                                 <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
                                                 <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
@@ -194,7 +171,7 @@
                                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                                     <div class="team-item rounded overflow-hidden">
                                         <div class="position-relative">
-                                            <img class="img-fluid" src="img/team-3.jpg" alt="">
+                                            <img class="img-fluid" src="{{ asset('img/team-3.jpg') }}" alt="">
                                             <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
                                                 <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
                                                 <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
@@ -210,7 +187,7 @@
                                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
                                     <div class="team-item rounded overflow-hidden">
                                         <div class="position-relative">
-                                            <img class="img-fluid" src="img/team-4.jpg" alt="">
+                                            <img class="img-fluid" src="{{ asset('img/team-4.jpg') }}" alt="">
                                             <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
                                                 <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
                                                 <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>

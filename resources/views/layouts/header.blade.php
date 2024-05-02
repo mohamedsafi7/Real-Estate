@@ -10,7 +10,7 @@
                 <div class="col-md-6 animated fadeIn">
                     <div class="owl-carousel header-carousel">
                         <div class="owl-carousel-item">
-                            <img class="img-fluid" src="img/carousel-1.jpg" alt="">
+                            <img class="img-fluid" src="{{ asset('img/carousel-1.jpg') }}" alt="">
                         </div>
 
                     </div>

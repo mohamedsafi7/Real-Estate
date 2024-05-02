@@ -37,6 +37,8 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
     Route::get('/properties', [PropretyController::class, 'get'])->name('properties.index');
     Route::get('/createproperties', [PropretyController::class, 'create'])->name('createproperties');
     Route::get('/editproperties/{id}', [PropretyController::class, 'edit'])->name('editproperty');
+    Route::post('/addproprety', [PropretyController::class, 'add'])->name('addproprety');
+
     Route::put('/updateproperties/{id}', [PropretyController::class, 'update'])->name('updateproperty');
     Route::delete('/deleteproperties/{id}', [PropretyController::class, 'destroy'])->name('deleteproperty');
 

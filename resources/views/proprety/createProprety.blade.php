@@ -5,7 +5,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form class="add-property-form" method="POST" action="{{ route('addproperty') }}" enctype="multipart/form-data">
+                    <form class="add-property-form" method="POST" action="{{ route('addproprety') }}" enctype="multipart/form-data">
 
                         @csrf
                         <div class="form-group row">
