@@ -44,10 +44,10 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
 
     
 
-    // profile
-    Route::get('/profile', [ProfileController::class, 'get'])->name('profile');
-    Route::get('/editprofile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
+ // profile
+ Route::get('/profile', [ProfileController::class, 'get'])->name('profile');
+ Route::get('/editprofile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
+ Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
  
 
 });
