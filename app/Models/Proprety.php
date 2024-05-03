@@ -18,7 +18,8 @@ class Proprety extends Model
         'bathrooms',
         'description',
         'category_id',
-        'listing_type_id'
+        'listing_type_id',
+        'user_id'
     ];
     use HasFactory;
 
@@ -36,6 +37,7 @@ class Proprety extends Model
     }
     public function images()
     {
-        return $this->hasMany(PropretyImage::class);
-    }   
+        return $this->hasMany(PropretyImage::class, 'property_id');
+    }
+    
 }

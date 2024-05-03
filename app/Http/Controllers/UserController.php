@@ -85,7 +85,6 @@ class UserController extends Controller
             return redirect('/login')->with('error', $th->getMessage())->withInput();
         }
     }
-    
 /**
  * Logout the authenticated user.
  *
@@ -95,24 +94,31 @@ class UserController extends Controller
 public function logoutUser(Request $request)
 {
     try {
-        // Revoke the current user's token (if using Laravel Sanctum for API authentication)
+        // Revoke the current user's token
         $request->user()->tokens()->delete();
 
-        // Unset session variables
-        session()->forget('authenticated'); // Assuming you're using a session variable for authentication
-        Auth::logout(); // Laravel's built-in logout method
+        // Log the user out
+        Auth::logout();
+
+        // Remove all session data for the user
+        $request->session()->invalidate();
+
+        // Regenerate the CSRF token
+        $request->session()->regenerateToken();
 
         // Redirect to the login view after logout
-        return Redirect::route('login')->with([
+        return redirect()->route('login')->with([
             'status' => true,
             'message' => 'User logged out successfully',
         ]);
     } catch (\Throwable $th) {
-        return Redirect::route('login')->with([
+        return redirect()->route('login')->with([
             'status' => false,
             'message' => $th->getMessage(),
         ]);
     }
 }
+
+
 
 }

@@ -12,10 +12,17 @@ use Illuminate\Support\Facades\Auth;
 class PropretyController extends Controller
 {
     public function get()
-{
-    $properties= Proprety::get();
-    return view('proprety.proprety', compact('properties'));
-}
+    {
+        $properties = Proprety::with('images')->get();
+    
+        // Loop through properties and keep only the first image
+        $properties->each(function ($property) {
+            $property->first_image = $property->images->isNotEmpty() ? $property->images->first()->image_path : null;
+        });
+    
+        return view('proprety.proprety', compact('properties'));
+    }
+
     public function create()
 {
     $categories = Category::all();
@@ -36,7 +43,7 @@ public function add(Request $request)
             'description' => 'required|string',
             'property-category' => 'required|exists:categories,id',
             'listing-type' => 'required|exists:listing_types,id',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048' // Validate each image
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp' // Validate each image
         ]);
         $userId = Auth::id();
 
@@ -68,6 +75,31 @@ public function add(Request $request)
             }
         }
 
-        return redirect()->route('properties');
+        return redirect()->route('properties.index');
+    }
+
+
+    public function edit( string $id){
+        $property = Proprety::FindOrFail($id);
+        $category = Category::all();
+
+        return view('proprety.editProperty',compact('property'));
+    }
+
+    public function update(Request $request , $id){
+        $property = Proprety::FindOrFail($id);
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp', 
+        ]);
+        $property->update($request->all());
+        return redirect()->route('profile'); 
+        
+    }
+
+
+    public function destroy($id){
+        $property = Proprety::FindOrFail($id);
+        $property->delete();
+        return redirect()->route('properties.index'); 
     }
 }
