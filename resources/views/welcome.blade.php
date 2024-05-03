@@ -16,9 +16,7 @@
                         <div class="owl-carousel-item">
                             <img class="img-fluid" src="img/carousel-1.jpg" alt="">
                         </div>
-                        <div class="owl-carousel-item">
-                            <img class="img-fluid" src="img/carousel-2.jpg" alt="">
-                        </div>
+
                     </div>
                 </div>
             </div>
