@@ -47,7 +47,7 @@
                         <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $pub->address }}</p>
                     </div>
                     <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $pub->size }} Sqft</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $pub->size }} m&sup2;</small>
                         <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{ $pub->bedrooms }} Bed</small>
                         <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{ $pub->bathrooms }} Bath</small>
                     </div>

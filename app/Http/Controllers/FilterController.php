@@ -48,8 +48,17 @@ public function show(Request $request)
             $query->where('name', $locationName);
        
     }
-
-    // Récupérer les propriétés filtrées
+    switch ($request->input('listing_type')) {
+        case 'rent':
+            $properties->where('listing_type_id', '1');
+            break;
+        case 'sell':
+            $properties->where('listing_type_id', '2');
+            break;
+        default:
+            // No filter applied
+            break;
+    }
     $listings = $properties->get();
 
     return view('welcome', compact('listings', 'properties', 'categories','topUsers'));

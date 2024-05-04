@@ -40,6 +40,7 @@ Route::middleware([Authenticate::class])->group(function () {
     Route::get('/properties', [PropretyController::class, 'get'])->name('properties.index');
     Route::get('/createproperties', [PropretyController::class, 'create'])->name('createproperties');
     Route::get('/editproperties/{id}', [PropretyController::class, 'edit'])->name('editproperty');
+    Route::get('/showproperty/{id}', [PropretyController::class, 'show'])->name('property.show');
     Route::post('/addproprety', [PropretyController::class, 'add'])->name('addproprety');
 
     Route::put('/updateproperties/{id}', [PropretyController::class, 'update'])->name('updateproperty');

@@ -43,9 +43,12 @@
                                     <div class="col-md-4">
                                         <select class="form-select border-0 py-3" name="location_filter" id="location_filter">
                                             <option selected>Location</option>
-                                            @foreach ($listings as $property)
-                                            <option>{{  $property->city}}</option>
-                                        @endforeach
+                                            @php
+                                                $uniqueCities = $listings->unique('city');
+                                            @endphp
+                                            @foreach ($uniqueCities as $property)
+                                                <option>{{ $property->city }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -56,6 +59,7 @@
                         </form>
                     </div>
                 </div>
+                
                 <!-- Search End -->
                 <div class="container-xxl bg-white p-0">
                     <!-- Spinner Start -->
@@ -90,13 +94,16 @@
                             </div>
                         </div>
                     </div>
-                    <!-- About End -->
-            
+                    <!-- About End -->        
             
                     <div class="container">
                         <div class="row" enctype="multipart/form-data">
+                            <div class="col-md-12 mb-3">
+                                <button class="btn btn-primary me-2" id="rent-btn">For Rent</button>
+                                <button class="btn btn-outline-primary" id="sell-btn">For Sale</button>
+                            </div>
                             @foreach ($properties as $property)
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="col-lg-4 col-md-6 property-item wow fadeInUp" data-wow-delay="0.1s" data-listing-type="{{ $property->listingType->name }}">
                                 <div class="property-item rounded overflow-hidden mb-4"> 
                                     <div class="position-relative overflow-hidden" style="height: 250px;"> 
                                         @if ($property->listingType->name == 'sell')
@@ -106,16 +113,16 @@
                                         @endif
                                         <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $property->category->name }}</div>
                                         @if ($property->images->count() > 0)
-                                            <a href=""><img class="img-fluid" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
+                                            <a href="{{ route('property.show', ['id' => $property->id]) }}"><img style="height: 300px;" class="img-fluid" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
                                         @endif
                                     </div>
                                     <div class="p-4 pb-0">
-                                        <h5 class="text-primary mb-3">${{ $property->price }}</h5>
-                                        <a class="d-block h5 mb-2" href="">{{ $property->name }}</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->address }}</p>
+                                        <h5 class="text-primary mb-3">{{ $property->price }} DH</h5>
+                                        <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}">{{ $property->name }}</a>
+                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->city }}</p>
                                     </div>
                                     <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $property->size }} Sqft</small>
+                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $property->size }} m&sup2;</small>
                                         <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{ $property->bedrooms }} Bed</small>
                                         <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{ $property->bathrooms }} Bath</small>
                                     </div>
@@ -125,10 +132,7 @@
                         </div>
                     </div>
                     
-                    
-            
-            
-            
+                        
                 <!-- Team Start -->
                 <div class="container-xxl py-5">
                     <div class="container">
@@ -142,7 +146,7 @@
                                 <div class="team-item rounded overflow-hidden">
                                     <div class="position-relative">
                                         @if ($user->image)
-                                        <img class="img-fluid" src="{{ asset('storage/users/' . $user->image) }}" alt="{{ $user->name }}">
+                                        <img class="img-fluid"  style="width: 310px; height:250px;"  src="{{ asset('storage/users/' . $user->image) }}" alt="{{ $user->name }}">
                                     @else
                                         <img class="img-fluid" src="{{ asset('generic.jpg') }}" alt="Anonymous">
                                     @endif                                        <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
@@ -167,4 +171,5 @@
                     <!-- Back to Top -->
                     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
                 </div>
+
 @endsection
