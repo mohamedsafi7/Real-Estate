@@ -75,7 +75,7 @@ public function add(Request $request)
             }
         }
 
-        return redirect()->route('properties.index');
+        return redirect()->route('index');
     }
 
 
@@ -94,6 +94,12 @@ public function add(Request $request)
         $property->update($request->all());
         return redirect()->route('profile'); 
         
+    }
+    public function show(string $id)
+    {
+        $property = Proprety::findOrFail($id);
+
+        return view('proprety.showProprety', compact('property'));
     }
 
 

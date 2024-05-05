@@ -1,7 +1,9 @@
 <?php
-use App\Models\Category;
-use App\Models\Proprety;
-use App\Models\ListingType;
+
+use App\Http\Controllers\AdminController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CheckSession;
+use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -24,7 +26,8 @@ Route::post('/logout', [UserController::class, 'logoutUser'])->middleware(['auth
 Route::get('/', [HomeController::class, 'get'])->name('index')->middleware('auth');
 
 // Routes for Authenticated Users
-Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->group(function () {
+Route::middleware([Authenticate::class])->group(function () {
+    Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/filtered', [FilterController::class, 'show'])->name('show');
 
     // Categories
@@ -37,6 +40,7 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
     Route::get('/properties', [PropretyController::class, 'get'])->name('properties.index');
     Route::get('/createproperties', [PropretyController::class, 'create'])->name('createproperties');
     Route::get('/editproperties/{id}', [PropretyController::class, 'edit'])->name('editproperty');
+    Route::get('/showproperty/{id}', [PropretyController::class, 'show'])->name('property.show');
     Route::post('/addproprety', [PropretyController::class, 'add'])->name('addproprety');
 
     Route::put('/updateproperties/{id}', [PropretyController::class, 'update'])->name('updateproperty');
@@ -49,7 +53,13 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
  Route::get('/editprofile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
  Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
  
+    //admin 
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::post('/admin/properties/{id}/validate', [AdminController::class, 'validateProperty'])->name('admin.validateProperty');
+    Route::post('/admin/unvalidate-property/{id}/validate', [AdminController::class, 'unvalidateProperty'])->name('admin.unvalidateProperty');
 
+    Route::delete('/admin/properties/{id}/delete', [AdminController::class, 'deleteProperty'])->name('admin.deleteProperty');
+});
 });
 
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Proprety;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FilterController extends Controller
@@ -13,6 +14,8 @@ class FilterController extends Controller
     // Fetch all categories
     $categories = Category::all();
     $propreties = Proprety::all();
+    $topUsers = User::withCount('properties')->orderByDesc('properties_count')->take(4)->get();
+
 
     if ($request->has('category')) {
         $filteredProperties = Proprety::where('category_id', $request->category)->get();
@@ -20,7 +23,7 @@ class FilterController extends Controller
         $filteredProperties = Proprety::all();
     }
     
-    return view('category.Hotel', compact('propreties','filteredProperties'));
+    return view('category.Hotel', compact('propreties','filteredProperties','topUsers'));
 }
 public function show(Request $request)
 {
@@ -30,6 +33,7 @@ public function show(Request $request)
 
     // Récupérer toutes les catégories
     $categories = Category::all();
+    $topUsers = User::withCount('properties')->orderByDesc('properties_count')->take(4)->get();
 
     // Filtrer par catégorie si une option de filtre est sélectionnée
     if ($request->filled('catigory_filter')) {
@@ -44,11 +48,20 @@ public function show(Request $request)
             $query->where('name', $locationName);
        
     }
-
-    // Récupérer les propriétés filtrées
+    switch ($request->input('listing_type')) {
+        case 'rent':
+            $properties->where('listing_type_id', '1');
+            break;
+        case 'sell':
+            $properties->where('listing_type_id', '2');
+            break;
+        default:
+            // No filter applied
+            break;
+    }
     $listings = $properties->get();
 
-    return view('welcome', compact('listings', 'properties', 'categories'));
+    return view('welcome', compact('listings', 'properties', 'categories','topUsers'));
 }
 
 

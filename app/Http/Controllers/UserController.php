@@ -94,28 +94,17 @@ class UserController extends Controller
 public function logoutUser(Request $request)
 {
     try {
-        // Revoke the current user's token
         $request->user()->tokens()->delete();
 
-        // Log the user out
         Auth::logout();
 
-        // Remove all session data for the user
         $request->session()->invalidate();
 
-        // Regenerate the CSRF token
         $request->session()->regenerateToken();
 
-        // Redirect to the login view after logout
-        return redirect()->route('login')->with([
-            'status' => true,
-            'message' => 'User logged out successfully',
-        ]);
+        return redirect()->route('login');
     } catch (\Throwable $th) {
-        return redirect()->route('login')->with([
-            'status' => false,
-            'message' => $th->getMessage(),
-        ]);
+        return redirect()->route('login');
     }
 }
 
