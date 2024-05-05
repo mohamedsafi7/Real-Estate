@@ -174,7 +174,7 @@
                                 <div class="team-item rounded overflow-hidden">
                                     <div class="position-relative">
                                         @if ($user->image)
-                                        <img class="img-fluid"  style="width: 310px; height:250px;"  src="{{ asset('storage/users/' . $user->image) }}" alt="{{ $user->name }}">
+                                        <img class="img-fluid"  style="width: 310px; height:250px; border-radius:50%"  src="{{ asset('storage/uploads/' . $user->image) }}" alt="{{ $user->name }}">
                                     @else
                                         <img class="img-fluid" src="{{ asset('generic.jpg') }}" alt="Anonymous">
                                     @endif                                        <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">

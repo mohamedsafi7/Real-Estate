@@ -27,7 +27,6 @@ Route::get('/', [HomeController::class, 'get'])->name('index')->middleware('auth
 
 // Routes for Authenticated Users
 Route::middleware([Authenticate::class])->group(function () {
-    Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/filtered', [FilterController::class, 'show'])->name('show');
 
     // Categories
@@ -52,7 +51,8 @@ Route::middleware([Authenticate::class])->group(function () {
  Route::get('/profile', [ProfileController::class, 'get'])->name('profile');
  Route::get('/editprofile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
  Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
- 
+ Route::middleware([AdminMiddleware::class])->group(function () {
+
     //admin 
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::post('/admin/properties/{id}/validate', [AdminController::class, 'validateProperty'])->name('admin.validateProperty');

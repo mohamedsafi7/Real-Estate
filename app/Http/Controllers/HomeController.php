@@ -14,7 +14,7 @@ class HomeController extends Controller
         $listings = Proprety::where('validated', true)->with(['listingType', 'category', 'images'])->get();
         $properties = Proprety::where('validated', true)->with('images')->get();
         $categories = Category::all();
-        $topUsers = User::withCount('properties')->orderByDesc('properties_count')->take(4)->get();
+        $topUsers = User::withCount('properties')->orderByDesc('properties_count')->limit(4)->get();
         return view('welcome', compact('categories','properties','listings','topUsers'));
     }
 
