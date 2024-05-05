@@ -81,9 +81,11 @@ public function add(Request $request)
 
     public function edit( string $id){
         $property = Proprety::FindOrFail($id);
-        $category = Category::all();
+        $categories = Category::all();
+        $listingTypes = ListingType::all();
 
-        return view('proprety.editProperty',compact('property'));
+
+        return view('proprety.editProperty',compact('property', 'categories','listingTypes'));
     }
 
     public function update(Request $request , $id){

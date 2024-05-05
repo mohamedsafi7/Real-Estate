@@ -44,7 +44,7 @@
                     <div class="p-4 pb-0">
                         <h5 class="text-primary mb-3">${{ $pub->price }}</h5>
                         <a class="d-block h5 mb-2" href="">{{ $pub->name }}</a>
-                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $pub->address }}</p>
+                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $pub->city }}</p>
                     </div>
                     <div class="d-flex border-top">
                         <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $pub->size }} m&sup2;</small>

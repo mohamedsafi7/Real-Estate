@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h1>Admin Panel - Table of Properties</h1>
+        <h1 class="mt-4">Admin Panel - Table of Properties</h1>
         <table class="table">
             <thead>
                 <tr>

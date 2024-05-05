@@ -35,6 +35,9 @@
                             <div class="dropdown-menu rounded-0 m-0">
                                 @auth
                                     <a href="profile" class="dropdown-item">{{ auth()->user()->name }}</a>
+                                    @if (auth()->user()->isAdmin())
+                                        <a href="{{route('admin.index')}}" class="dropdown-item">Dashboard</a>
+                                    @endif
                                     <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
