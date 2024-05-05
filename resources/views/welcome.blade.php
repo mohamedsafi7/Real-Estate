@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="{{ asset('css/show.css') }}" rel="stylesheet">
 
 @section('content')
         <!-- Header Start -->
@@ -40,17 +42,20 @@
                                         </select>
                                     </div>
                                     
-                                    <div class="col-md-4">
-                                        <select class="form-select border-0 py-3" name="location_filter" id="location_filter">
-                                            <option selected>Location</option>
+                                    <div class="col-md-4 position-relative">
+                                        <input id="location" name="location" type="text" list="location_datalist" class="form-control border-0 py-3" placeholder="Location">
+                                        <datalist id="location_datalist">
+                                            <option selected disabled>Location</option>
                                             @php
                                                 $uniqueCities = $listings->unique('city');
                                             @endphp
                                             @foreach ($uniqueCities as $property)
                                                 <option>{{ $property->city }}</option>
                                             @endforeach
-                                        </select>
+                                        </datalist>
+                                        <i class="bi bi-search position-absolute top-50 start-50 translate-middle" style="transform: translate(-50%, -50%);"></i>
                                     </div>
+                                    
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -194,5 +199,20 @@
                     <!-- Back to Top -->
                     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
                 </div>
+<script>
+    $('#your-form-id').on('submit', e => {
+    $('#error').empty();
+    let form = $(e.target);
+    let validOptions = form.find('#location_datalist option').map((key, option) => option.value).toArray();
+    let customField1Value = form.find('input[name=location]').eq(0).val();
 
+    // check if custom_field_1's value is in the datalist. If it's not, it's an invalid choice
+    if ( !(validOptions.indexOf(customField1Value) > -1) ) {
+        // show error
+        $('#error').text('Invalid Choice');
+        // prevent form submission (you should still validate in the backend)
+        e.preventDefault();
+    }
+});
+</script>
 @endsection
