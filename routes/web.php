@@ -55,10 +55,14 @@ Route::middleware([Authenticate::class])->group(function () {
     Route::middleware([AdminMiddleware::class])->group(function () {
     //admin 
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/userslist', [AdminController::class, 'users'])->name('admin.userslist');
     Route::post('/admin/properties/{id}/validate', [AdminController::class, 'validateProperty'])->name('admin.validateProperty');
     Route::post('/admin/unvalidate-property/{id}/validate', [AdminController::class, 'unvalidateProperty'])->name('admin.unvalidateProperty');
+    Route::post('/admin/user/{id}/validate', [AdminController::class, 'validateUser'])->name('admin.validateUser');
+    Route::post('/admin/unvalidate-user/{id}/validate', [AdminController::class, 'unvalidateUser'])->name('admin.unvalidateUser');
 
     Route::delete('/admin/properties/{id}/delete', [AdminController::class, 'deleteProperty'])->name('admin.deleteProperty');
+    Route::delete('/admin/user/{id}/delete', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 });
 });
 

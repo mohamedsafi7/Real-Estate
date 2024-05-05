@@ -37,6 +37,7 @@
                                     <a href="profile" class="dropdown-item">{{ auth()->user()->name }}</a>
                                     @if (auth()->user()->isAdmin())
                                         <a href="{{route('admin.index')}}" class="dropdown-item">Dashboard</a>
+                                        <a href="{{route('admin.userslist')}}" class="dropdown-item">Users</a>
                                     @endif
                                     <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
