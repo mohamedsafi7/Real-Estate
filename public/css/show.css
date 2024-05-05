@@ -1,0 +1,26 @@
+/* Adjust the search icon */
+.bi-search {
+    font-size: 1.5rem;
+    color: #6c757d; 
+    pointer-events: none; 
+}
+
+#location {
+    border-radius: 0; 
+    box-shadow: none;
+    border-color: #ced4da; 
+    padding-right: 2.5rem;
+}
+
+#location_datalist option {
+    color: #000; 
+    background-color: #fff;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.position-absolute {
+    position: absolute;
+}
