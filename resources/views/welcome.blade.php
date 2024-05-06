@@ -53,7 +53,7 @@
                                                 <option>{{ $property->city }}</option>
                                             @endforeach
                                         </datalist>
-                                        <i class="bi bi-search position-absolute top-50 start-50 translate-middle" style="transform: translate(-50%, -50%);"></i>
+                                        {{-- <i class="bi bi-search position-absolute top-50 start-50 translate-middle" style="transform: translate(-50%, -50%);"></i> --}}
                                     </div>
                                     
                                 </div>
@@ -117,7 +117,27 @@
                                             <div class="bg-warning rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Rent</div>
                                         @endif
                                         <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $property->category->name }}</div>
-                                        @if ($property->images->count() > 0)
+                                        @if ($property->images->count() > 1)
+                                        <div id="propertyCarousel_{{ $property->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+                                            <div class="carousel-inner">
+                                                @foreach ($property->images as $key => $image)
+                                                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                                    <a href="{{ route('property.show', ['id' => $property->id]) }}">
+                                                        <img style="height: 300px;" class="d-block w-100 img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt="">
+                                                    </a>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel_{{ $property->id }}" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel_{{ $property->id }}" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                        </div>
+                                        @elseif ($property->images->count() == 1)
                                             <a href="{{ route('property.show', ['id' => $property->id]) }}"><img style="height: 300px;" class="img-fluid" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
                                         @endif
                                     </div>
@@ -134,6 +154,7 @@
                                 </div>
                             </div>
                             @endforeach
+                            
                         </div>
                     </div>
                     
@@ -151,7 +172,7 @@
                                 <div class="team-item rounded overflow-hidden">
                                     <div class="position-relative">
                                         @if ($user->image)
-                                        <img class="img-fluid"  style="width: 310px; height:250px;"  src="{{ asset('storage/users/' . $user->image) }}" alt="{{ $user->name }}">
+                                        <img class="img-fluid"  style="width: 310px; height:250px; "  src="{{ asset('storage/users/' . $user->image) }}" alt="{{ $user->name }}">
                                     @else
                                         <img class="img-fluid" src="{{ asset('generic.jpg') }}" alt="Anonymous">
                                     @endif                                        <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">

@@ -5,7 +5,7 @@
                     <div class="icon p-2 me-2">
                         <img class="img-fluid" src="{{ asset('img/icon-deal.png') }}" alt="Icon" style="width: 30px; height: 30px;">
                     </div>
-                    <h1 class="m-0 text-primary">WARM Home</h1>
+                    <h1 class="m-0 text-primary">HomeScape</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
@@ -13,23 +13,25 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav ms-auto">
                         <a href="{{route('index')}}" class="nav-item nav-link active">Home</a>
-                        <a href="about.html" class="nav-item nav-link">About</a>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
-                            <div class="dropdown-menu rounded-0 m-0">
-                                <a href="property-list.html" class="dropdown-item">Property List</a>
-                                <a href="property-type.html" class="dropdown-item">Property Type</a>
-                                <a href="property-agent.html" class="dropdown-item">Property Agent</a>
-                            </div>
-                        </div>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                            <div class="dropdown-menu rounded-0 m-0">
-                                <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                                <a href="404.html" class="dropdown-item">404 Error</a>
-                            </div>
-                        </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        @unless(auth()->user()->isAdmin())
+                                <a href="about.html" class="nav-item nav-link">About</a>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
+                                    <div class="dropdown-menu rounded-0 m-0">
+                                        <a href="property-list.html" class="dropdown-item">Property List</a>
+                                        <a href="property-type.html" class="dropdown-item">Property Type</a>
+                                        <a href="property-agent.html" class="dropdown-item">Property Agent</a>
+                                    </div>
+                                </div>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                                    <div class="dropdown-menu rounded-0 m-0">
+                                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                                        <a href="404.html" class="dropdown-item">404 Error</a>
+                                    </div>
+                                </div>
+                                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        @endunless
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Profile</a>
                             <div class="dropdown-menu rounded-0 m-0">
@@ -53,7 +55,10 @@
                         
 
                     </div>
+                    @unless(auth()->user()->isAdmin())
                     <a href="{{route('createproperties')}}" class="btn btn-primary px-3 d-none d-lg-flex">Add Property</a>
+                    @endunless
+
                 </div>
             </nav>
         </div>
