@@ -36,7 +36,7 @@
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Profile</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 @auth
-                                    <a href="profile" class="dropdown-item"><i class="fa-regular fa-user"></i>&nbsp;&nbsp;&nbsp{{ auth()->user()->name }}</a> 
+                                    <a href="{{route('profile')}}" class="dropdown-item"><i class="fa-regular fa-user"></i>&nbsp;&nbsp;&nbsp{{ auth()->user()->name }}</a> 
                                     
                                     
                                     

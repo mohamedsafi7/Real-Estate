@@ -1,1 +1,1 @@
-<h1>admin</h1>
+<a href="{{route('getUsers')}}">getUsers</a>

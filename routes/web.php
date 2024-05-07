@@ -50,6 +50,9 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
     Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
  
 
+    //Admin
+    Route::get('admin',[AdminController::class,'getUsers'])->name('getUsers');
+
 });
 
 
