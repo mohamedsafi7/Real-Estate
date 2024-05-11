@@ -99,8 +99,7 @@ public function add(Request $request)
     }
     public function show(string $id)
     {
-        $property = Proprety::findOrFail($id);
-
+        $property = Proprety::with('owner')->findOrFail($id);
         return view('proprety.showProprety', compact('property'));
     }
 
