@@ -1,7 +1,9 @@
 <?php
-use App\Models\Category;
-use App\Models\Proprety;
-use App\Models\ListingType;
+
+use App\Http\Controllers\AdminController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CheckSession;
+use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
@@ -25,7 +27,7 @@ Route::post('/logout', [UserController::class, 'logoutUser'])->middleware(['auth
 Route::get('/', [HomeController::class, 'get'])->name('index')->middleware('auth');
 
 // Routes for Authenticated Users
-Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->group(function () {
+Route::middleware([Authenticate::class])->group(function () {
     Route::get('/filtered', [FilterController::class, 'show'])->name('show');
 
     // Categories
@@ -39,6 +41,9 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
     Route::get('/createproperties', [PropretyController::class, 'create'])->name('createproperties');
     Route::post('/addprop', [PropretyController::class, 'add'])->name('addproperty');
     Route::get('/editproperties/{id}', [PropretyController::class, 'edit'])->name('editproperty');
+    Route::get('/showproperty/{id}', [PropretyController::class, 'show'])->name('property.show');
+    Route::post('/addproprety', [PropretyController::class, 'add'])->name('addproprety');
+
     Route::put('/updateproperties/{id}', [PropretyController::class, 'update'])->name('updateproperty');
     Route::delete('/deleteproperties/{id}', [PropretyController::class, 'destroy'])->name('deleteproperty');
 
@@ -48,11 +53,19 @@ Route::middleware(['web', '\App\Http\Middleware\CheckSession::class', 'auth'])->
     Route::get('/profile', [ProfileController::class, 'get'])->name('profile');
     Route::get('/editprofile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
- 
 
-    //Admin
-    Route::get('admin',[AdminController::class,'getUsers'])->name('getUsers');
+    Route::middleware([AdminMiddleware::class])->group(function () {
+    //admin 
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/userslist', [AdminController::class, 'users'])->name('admin.userslist');
+    Route::post('/admin/properties/{id}/validate', [AdminController::class, 'validateProperty'])->name('admin.validateProperty');
+    Route::post('/admin/unvalidate-property/{id}/validate', [AdminController::class, 'unvalidateProperty'])->name('admin.unvalidateProperty');
+    Route::post('/admin/user/{id}/validate', [AdminController::class, 'validateUser'])->name('admin.validateUser');
+    Route::post('/admin/unvalidate-user/{id}/validate', [AdminController::class, 'unvalidateUser'])->name('admin.unvalidateUser');
 
+    Route::delete('/admin/properties/{id}/delete', [AdminController::class, 'deleteProperty'])->name('admin.deleteProperty');
+    Route::delete('/admin/user/{id}/delete', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+});
 });
 
 

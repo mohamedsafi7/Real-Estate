@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="{{ asset('css/show.css') }}" rel="stylesheet">
 
 @section('content')
         <!-- Header Start -->
@@ -14,7 +16,7 @@
                 <div class="col-md-6 animated fadeIn">
                     <div class="owl-carousel header-carousel">
                         <div class="owl-carousel-item">
-                            <img class="img-fluid" src="img/carousel-1.jpg" alt="">
+                            <img class="" src="{{ asset('img/carousel-1.jpg') }}" alt="">
                         </div>
 
                     </div>
@@ -39,14 +41,21 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
-                                        <select class="form-select border-0 py-3" name="location_filter" id="location_filter">
-                                            <option selected>Location</option>
-                                            @foreach ($listings as $property)
-                                            <option>{{  $property->city}}</option>
-                                        @endforeach
-                                        </select>
+                                    
+                                    <div class="col-md-4 position-relative">
+                                        <input id="location" name="location" type="text" list="location_datalist" class="form-control border-0 py-3" placeholder="Location">
+                                        <datalist id="location_datalist">
+                                            <option selected disabled>Location</option>
+                                            @php
+                                                $uniqueCities = $listings->unique('city');
+                                            @endphp
+                                            @foreach ($uniqueCities as $property)
+                                                <option>{{ $property->city }}</option>
+                                            @endforeach
+                                        </datalist>
+                                        {{-- <i class="bi bi-search position-absolute top-50 start-50 translate-middle" style="transform: translate(-50%, -50%);"></i> --}}
                                     </div>
+                                    
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -55,6 +64,7 @@
                         </form>
                     </div>
                 </div>
+                
                 <!-- Search End -->
                 <div class="container-xxl bg-white p-0">
                     <!-- Spinner Start -->
@@ -66,30 +76,7 @@
                     <!-- Spinner End -->
 
                     <!-- Category Start -->
-<div class="container-xxl py-5">
-    <div class="container">
-        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3">Property Types</h1>
-            <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
-        </div>
-        <div class="row g-4">
-            @foreach ($categories as $category)
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.{{ $loop->iteration }}s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{{ route('categories.show', $category->id) }}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="img/{{ $category->name }}.png" alt="Icon">
-                        </div>
-                        <h6>{{ $category->name }}</h6>
-                        <span>{{ $category->properties_count }} Properties</span>
-                    </div>
-                </a>
-            </div>
-        @endforeach
-        
-        </div>
-    </div>
-</div>
+
 <!-- Category End -->
             
                     <!-- About Start -->
@@ -98,7 +85,7 @@
                             <div class="row g-5 align-items-center">
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                                     <div class="about-img position-relative overflow-hidden p-5 pe-0">
-                                        <img class="img-fluid w-100" src="img/about.jpg">
+                                        <img class="img-fluid w-100" src="{{ asset('img/about.jpg') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
@@ -112,121 +99,118 @@
                             </div>
                         </div>
                     </div>
-                    <!-- About End -->
-            
+                    <!-- About End -->        
             
                     <div class="container">
                         <div class="row" enctype="multipart/form-data">
-                            @foreach ($listings as $property)
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
+                            <div class="col-md-12 mb-3">
+                                <button class="btn btn-primary me-2" id="rent-btn">For Rent</button>
+                                <button class="btn btn-outline-primary" id="sell-btn">For Sale</button>
+                            </div>
+                            @foreach ($properties as $property)
+                            <div class="col-lg-4 col-md-6 property-item wow fadeInUp" data-wow-delay="0.1s" data-listing-type="{{ $property->listingType->name }}">
+                                <div class="property-item rounded overflow-hidden mb-4"> 
+                                    <div class="position-relative overflow-hidden" style="height: 250px;"> 
                                         @if ($property->listingType->name == 'sell')
-                                        <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Sell</div>
+                                            <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Sell</div>
                                         @else
-                                        <div class="bg-warning rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Rent</div>
+                                            <div class="bg-warning rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Rent</div>
                                         @endif
                                         <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $property->category->name }}</div>
-                                        @foreach ($property->images as $image)
-                                            <a href=""><img class="img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt=""></a>
-                    
-                                        @endforeach
+                                        @if ($property->images->count() > 1)
+                                        <div id="propertyCarousel_{{ $property->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+                                            <div class="carousel-inner">
+                                                @foreach ($property->images as $key => $image)
+                                                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                                    <a href="{{ route('property.show', ['id' => $property->id]) }}">
+                                                        <img style="height: 300px;" class="d-block w-100 img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt="">
+                                                    </a>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel_{{ $property->id }}" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel_{{ $property->id }}" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                        </div>
+                                        @elseif ($property->images->count() == 1)
+                                            <a href="{{ route('property.show', ['id' => $property->id]) }}"><img style="height: 300px;" class="img-fluid" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
+                                        @endif
                                     </div>
                                     <div class="p-4 pb-0">
-                                        <h5 class="text-primary mb-3">${{ $property->price }}</h5>
-                                        <a class="d-block h5 mb-2" href="">{{ $property->name }}</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->address }}</p>
+                                        <h5 class="text-primary mb-3">{{ $property->price }} DH</h5>
+                                        <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}">{{ $property->name }}</a>
+                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->city }}</p>
                                     </div>
                                     <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $property->size }} Sqft</small>
+                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $property->size }} m&sup2;</small>
                                         <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{ $property->bedrooms }} Bed</small>
                                         <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{ $property->bathrooms }} Bath</small>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
+                            
                         </div>
                     </div>
-            
-            
-            
-                    <!-- Team Start -->
-                    <div class="container-xxl py-5">
-                        <div class="container">
-                            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-                                <h1 class="mb-3">Property Agents</h1>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati totam reiciendis commodi dignissimos eaque facere impedit, eligendi atque minima labore et error sint adipisci saepe consequatur ab expedita libero minus.</p>
-                            </div>
-                            <div class="row g-4">
-                                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                                    <div class="team-item rounded overflow-hidden">
-                                        <div class="position-relative">
-                                            <img class="img-fluid" src="img/team-1.jpg" alt="">
-                                            <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="text-center p-4 mt-3">
-                                            <h5 class="fw-bold mb-0">Full Name</h5>
-                                            <small>Designation</small>
+                    
+                        
+                <!-- Team Start -->
+                <div class="container-xxl py-5">
+                    <div class="container">
+                        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                            <h1 class="mb-3">Top Property Agents</h1>
+                            <p>presents a curated selection of the most prolific individuals within our real estate ecosystem. These agents have distinguished themselves by overseeing a substantial number of properties, showcasing their expertise and dedication to facilitating successful transactions.</p>
+                        </div>
+                        <div class="row g-4">
+                            @foreach ($topUsers as $user)
+                            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                <div class="team-item rounded overflow-hidden">
+                                    <div class="position-relative">
+                                        @if ($user->image)
+                                        <img class="img-fluid"  style="width: 310px; height:250px; "  src="{{ asset('storage/users/' . $user->image) }}" alt="{{ $user->name }}">
+                                    @else
+                                        <img class="img-fluid" src="{{ asset('generic.jpg') }}" alt="Anonymous">
+                                    @endif                                        <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
+                                            <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
+                                            <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
+                                            <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                                    <div class="team-item rounded overflow-hidden">
-                                        <div class="position-relative">
-                                            <img class="img-fluid" src="img/team-2.jpg" alt="">
-                                            <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="text-center p-4 mt-3">
-                                            <h5 class="fw-bold mb-0">Full Name</h5>
-                                            <small>Designation</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                                    <div class="team-item rounded overflow-hidden">
-                                        <div class="position-relative">
-                                            <img class="img-fluid" src="img/team-3.jpg" alt="">
-                                            <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="text-center p-4 mt-3">
-                                            <h5 class="fw-bold mb-0">Full Name</h5>
-                                            <small>Designation</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                                    <div class="team-item rounded overflow-hidden">
-                                        <div class="position-relative">
-                                            <img class="img-fluid" src="img/team-4.jpg" alt="">
-                                            <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
-                                                <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="text-center p-4 mt-3">
-                                            <h5 class="fw-bold mb-0">Full Name</h5>
-                                            <small>Designation</small>
-                                        </div>
+                                    <div class="text-center p-4 mt-3">
+                                        <h5 class="fw-bold mb-0">{{ $user->name }}</h5>
+                                        <small>{{ $user->email }}</small>
+                                        <p>Total Properties: {{ $user->properties_count }}</p>
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
                         </div>
                     </div>
-                    <!-- Team End -->
+                </div>
+                <!-- Team End -->
+
                     <!-- Back to Top -->
                     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
                 </div>
+<script>
+    $('#your-form-id').on('submit', e => {
+    $('#error').empty();
+    let form = $(e.target);
+    let validOptions = form.find('#location_datalist option').map((key, option) => option.value).toArray();
+    let customField1Value = form.find('input[name=location]').eq(0).val();
+
+    // check if custom_field_1's value is in the datalist. If it's not, it's an invalid choice
+    if ( !(validOptions.indexOf(customField1Value) > -1) ) {
+        // show error
+        $('#error').text('Invalid Choice');
+        // prevent form submission (you should still validate in the backend)
+        e.preventDefault();
+    }
+});
+</script>
 @endsection

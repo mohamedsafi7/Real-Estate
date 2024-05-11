@@ -64,29 +64,30 @@ class UserController extends Controller
     {
         return view('login');
     }
-/**
- * Login a user.
- *
- * @param Request $request
- * @return \Illuminate\Http\RedirectResponse
- */
-public function loginUser(Request $request)
-{
-    try {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return redirect('/login')->with('error', 'Invalid credentials')->withInput();
-        }
-        
-        if (Auth::user()->role === 'admin') {
-            return redirect()->route('dashboard');
-        } else {
-            return redirect('/');
-        }
-    } catch (\Throwable $th) {
-        return redirect('/login')->with('error', $th->getMessage())->withInput();
-    }
-}
 
+    /**
+     * Login a user.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function loginUser(Request $request)
+    {
+        try {
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return redirect('/login')->with('error', 'Invalid credentials')->withInput();
+            }
+            
+            session(['authenticated' => true]);
+            if (Auth::user()->isAdmin()) {
+                return redirect()->route('admin.index');
+            } else {
+                return redirect()->intended('/');
+            }
+        } catch (\Throwable $th) {
+            return redirect('/login')->with('error', $th->getMessage())->withInput();
+        }
+    }
 /**
  * Logout the authenticated user.
  *
@@ -96,28 +97,17 @@ public function loginUser(Request $request)
 public function logoutUser(Request $request)
 {
     try {
-        // Revoke the current user's token
         $request->user()->tokens()->delete();
 
-        // Log the user out
         Auth::logout();
 
-        // Remove all session data for the user
         $request->session()->invalidate();
 
-        // Regenerate the CSRF token
         $request->session()->regenerateToken();
 
-        // Redirect to the login view after logout
-        return redirect()->route('login')->with([
-            'status' => true,
-            'message' => 'User logged out successfully',
-        ]);
+        return redirect()->route('login');
     } catch (\Throwable $th) {
-        return redirect()->route('login')->with([
-            'status' => false,
-            'message' => $th->getMessage(),
-        ]);
+        return redirect()->route('login');
     }
 }
 public function dashboard()

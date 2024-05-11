@@ -26,22 +26,22 @@
                     <h5 class="text-white mb-4">Photo Gallery</h5>
                     <div class="row g-2 pt-2">
                         <div class="col-4">
-                            <img class="img-fluid rounded bg-light p-1" src="img/property-1.jpg" alt="">
+                            <img class="img-fluid rounded bg-light p-1" src="{{ asset('img/property-1.jpg') }}" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid rounded bg-light p-1" src="img/property-2.jpg" alt="">
+                            <img class="img-fluid rounded bg-light p-1" src="{{ asset('img/property-2.jpg') }}" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid rounded bg-light p-1" src="img/property-3.jpg" alt="">
+                            <img class="img-fluid rounded bg-light p-1" src="{{ asset('img/property-3.jpg') }}" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid rounded bg-light p-1" src="img/property-4.jpg" alt="">
+                            <img class="img-fluid rounded bg-light p-1" src="{{ asset('img/property-4.jpg') }}" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid rounded bg-light p-1" src="img/property-5.jpg" alt="">
+                            <img class="img-fluid rounded bg-light p-1" src="{{ asset('img/property-5.jpg') }}" alt="">
                         </div>
                         <div class="col-4">
-                            <img class="img-fluid rounded bg-light p-1" src="img/property-6.jpg" alt="">
+                            <img class="img-fluid rounded bg-light p-1" src="{{ asset('img/property-6.jpg') }}" alt="">
                         </div>
                     </div>
                 </div>
@@ -59,10 +59,8 @@
             <div class="copyright">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved. 
+                        &copy; <a class="border-bottom" href="#">HomeScape</a>, All Right Reserved. 
                         
-                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
                     </div>
                     <div class="col-md-6 text-center text-md-end">
                         <div class="footer-menu">
