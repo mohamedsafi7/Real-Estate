@@ -11,6 +11,7 @@ use App\Http\Controllers\FilterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PropretyController;
+use App\Http\Controllers\GoogleAuthController;
 
 // authentification
 Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
@@ -19,6 +20,13 @@ Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [UserController::class, 'loginUser']);
 
 Route::get('/admin', [UserController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+
+
+//google-auth
+Route::get('/auth/google',[GoogleAuthController::class,'redirect'])->name('google-auth');
+Route::get('/auth/google/call-back',[GoogleAuthController::class,'handleCallback']);
+
+
 
 // Logout route
 Route::post('/logout', [UserController::class, 'logoutUser'])->middleware(['auth:sanctum'])->name('logout');

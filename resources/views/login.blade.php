@@ -93,6 +93,7 @@
               >
                 Sign In
               </button>
+              <button><a href="{{route('google-auth')}}">google</a></button>
             </div>
           </form>
         </div>
