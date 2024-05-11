@@ -55,6 +55,10 @@ Route::middleware([Authenticate::class])->group(function () {
     Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::middleware([AdminMiddleware::class])->group(function () {
+            // profile
+    Route::get('/admin/profile', [ProfileController::class, 'get'])->name('profile');
+    Route::get('/admin/editprofil/{id}', [ProfileController::class, 'edit'])->name('profiledit');
+    Route::put('/admin/updateprofil/{id}', [ProfileController::class, 'update'])->name('profileupdate');
     //admin 
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/userslist', [AdminController::class, 'users'])->name('admin.userslist');

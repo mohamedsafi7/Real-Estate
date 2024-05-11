@@ -29,7 +29,7 @@
     </div>
     <div class="row">
         @foreach ($pubs as $pub)
-        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="col-lg-4 col-md-6 wow fadeInUp mt-4" data-wow-delay="0.1s">
             <div class="property-item rounded overflow-hidden">
                 <div class="position-relative overflow-hidden">
                     @if ($pub->listingType->name == 'sell')
@@ -38,10 +38,29 @@
                     <div class="bg-warning rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Rent</div>
                     @endif
                     <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $pub->category->name }}</div>
-                    @foreach ($pub->images as $image)
-                        <a href=""><img class="img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt=""></a>
-
-                    @endforeach
+                    @if ($pub->images->count() > 1)
+                    <div id="propertyCarousel_{{ $pub->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+                        <div class="carousel-inner">
+                            @foreach ($pub->images as $key => $image)
+                            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                <a href="{{ route('property.show', ['id' => $pub->id]) }}">
+                                    <img style="height: 300px;" class="d-block w-100 img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt="">
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel_{{ $pub->id }}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel_{{ $pub->id }}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    @elseif ($pub->images->count() == 1)
+                        <a href="{{ route('property.show', ['id' => $pub->id]) }}"><img style="height: 300px;" class="img-fluid" src="{{ asset('storage/images/' . $pub->images->first()->image_path) }}" alt=""></a>
+                    @endif
                 </div>
                 <div class="p-4 pb-0">
                     <h5 class="text-primary mb-3">${{ $pub->price }}</h5>

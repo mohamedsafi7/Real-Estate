@@ -53,10 +53,7 @@ class User extends Authenticatable
      *
      * @return bool
      */
-    public function isAdmin()
-    {
-        return $this->role === self::ROLE_ADMIN;
-    }
+
     
     public function properties()
     {
@@ -70,6 +67,6 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        return $this->role === 'admin'; // Adjust this condition based on how you define admin users in your system
+        return $this->role === 'admin';
     }
 }
