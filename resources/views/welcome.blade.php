@@ -103,13 +103,17 @@
             
                     <div class="container">
                         <div class="row" enctype="multipart/form-data" id="property-list">
-                            <div class="col-md-12 mb-3">
+                            {{-- <div class="col-md-12 mb-3">
                                 <button class="btn btn-primary me-2" id="rent-btn">For Rent</button>
                                 <button class="btn btn-outline-primary" id="sell-btn">For Sale</button>
-                            </div>
-                            @foreach ($properties as $property)
-                            <div class="col-lg-4 col-md-6 property-item wow fadeInUp" data-wow-delay="0.1s" data-listing-type="{{ $property->listingType->name }}">
-                                <div class="property-item rounded overflow-hidden mb-4"> 
+                            </div> --}}
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2>Places for rent</h2>
+                                </div>
+                                @foreach ($properties->where('listingType.name', 'rent')->take(4) as $property)
+                                <div class="col-lg-3 col-md-6 property-item wow fadeInUp" data-wow-delay="0.1s" data-listing-type="{{ $property->listingType->name }}">
+                                    <div class="property-item rounded overflow-hidden mb-4"> 
                                     <div class="position-relative overflow-hidden" style="height: 250px;"> 
                                         <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $property->category->name }}</div>
                                         @if ($property->images->count() > 1)
@@ -158,7 +162,73 @@
                                 </div>
                             </div>
                             @endforeach
-                            
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12 text-center">
+                                <a href="#" class="btn btn-secondary">Show more places for rent</a>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h2>Places for sell</h2>
+                            </div>
+                            @foreach ($properties->where('listingType.name', 'sell')->take(4) as $property)
+                            <div class="col-lg-3 col-md-6 property-item wow fadeInUp" data-wow-delay="0.1s" data-listing-type="{{ $property->listingType->name }}">
+                                <div class="property-item rounded overflow-hidden mb-4"> 
+                                <div class="position-relative overflow-hidden" style="height: 250px;"> 
+                                    <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $property->category->name }}</div>
+                                    @if ($property->images->count() > 1)
+                                        <div id="propertyCarousel_{{ $property->id }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+                                            <div class="carousel-inner">
+                                                @foreach ($property->images as $key => $image)
+                                                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                                         <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}"><img style="height: 300px;" class="d-block w-100 img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt=""></a>
+                                                        @if ($property->listingType->name == 'sell')
+                                                            <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Sell</div>
+                                                        @else
+                                                            <div class="bg-warning rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Rent</div>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel_{{ $property->id }}" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel_{{ $property->id }}" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                        </div>
+                                    @elseif ($property->images->count() == 1)
+                                        <a href="{{ route('property.show', ['id' => $property->id]) }}"><img style="height: 300px;" class="img-fluid" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
+                                        @if ($property->listingType->name == 'sell')
+                                            <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Sell</div>
+                                        @else
+                                            <div class="bg-warning rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Rent</div>
+                                        @endif
+                                    @endif
+                                </div>
+                                
+                                <div class="p-4 pb-0">
+                                    <h5 class="text-primary mb-3">{{ $property->price }} DH</h5>
+                                    <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}">{{ $property->name }}</a>
+                                    <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->city }}</p>
+                                </div>
+                                <div class="d-flex border-top">
+                                    <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $property->size }} m&sup2;</small>
+                                    <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{ $property->bedrooms }} Bed</small>
+                                    <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{ $property->bathrooms }} Bath</small>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <a href="#" class="btn btn-primary">Show more places for sell</a>
+                        </div>
+                    </div>
                         </div>
                     </div>
                     
