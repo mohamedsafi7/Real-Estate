@@ -27,14 +27,14 @@
                 <!-- Search Start -->
                 <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
                     <div class="container">
-                        <form action="{{ route('show') }}" method="GET" class="row g-2">
+                        <form action="{{ route('filter.properties') }}" method="GET" class="row g-2">
                             <div class="col-md-10">
                                 <div class="row g-2">
                                     <div class="col-md-4">
                                         <input type="text" class="form-control border-0 py-3" placeholder="Search Keyword">
                                     </div>
                                     <div class="col-md-4">
-                                        <select class="form-select border-0 py-3" name="catigory_filter" id="catigory_filter">
+                                        <select class="form-select border-0 py-3" name="category_filter" id="category_filter">
                                             <option selected>Property Category</option>
                                             @foreach ($categories as $category)
                                                 <option>{{ $category->name }}</option>
@@ -102,7 +102,7 @@
                     <!-- About End -->        
             
                     <div class="container">
-                        <div class="row" enctype="multipart/form-data">
+                        <div class="row" enctype="multipart/form-data" id="property-list">
                             <div class="col-md-12 mb-3">
                                 <button class="btn btn-primary me-2" id="rent-btn">For Rent</button>
                                 <button class="btn btn-outline-primary" id="sell-btn">For Sale</button>
@@ -117,7 +117,7 @@
                                                 <div class="carousel-inner">
                                                     @foreach ($property->images as $key => $image)
                                                         <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                                            <img style="height: 300px;" class="d-block w-100 img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt="">
+                                                             <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}"><img style="height: 300px;" class="d-block w-100 img-fluid" src="{{ asset('storage/images/' . $image->image_path) }}" alt=""></a>
                                                             @if ($property->listingType->name == 'sell')
                                                                 <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Sell</div>
                                                             @else
@@ -197,14 +197,36 @@
                     </div>
                 </div>
                 <!-- Team End -->
+                <div class="container-xxl py-5">
+                    <div class="container">
+                        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                            <h1 class="mb-3">Most Popular Visited Cities</h1>
+                            <p>presents a curated selection of the most prolific individuals within our real estate ecosystem. These agents have distinguished themselves by overseeing a substantial number of properties, showcasing their expertise and dedication to facilitating successful transactions.</p>
+                        </div>
+                        <div class="row g-4">
+                            @foreach ($topCities as $city)
+                            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                <div class="team-item rounded overflow-hidden">
+                                    <div class="text-center p-4 mt-3">
+                                        <h5 class="fw-bold mb-0">{{ $city->city }}</h5>
+                                        <img style="width: 310px; height:250px; " class="img-fluid" src="img/{{ $city->city }}.jpg" alt="Icon">
+                                        <p>{{ $city->property_count }} properties</p>
 
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                            
+                        </div>
+                    </div>
+                </div>
                     <!-- Back to Top -->
                     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
                 </div>
 <script>
     $('#your-form-id').on('submit', e => {
     $('#error').empty();
-    let form = $(e.target);
+    let form = $(e.target);d
     let validOptions = form.find('#location_datalist option').map((key, option) => option.value).toArray();
     let customField1Value = form.find('input[name=location]').eq(0).val();
 
@@ -217,4 +239,41 @@
     }
 });
 </script>
+<script>
+$(document).ready(function() {
+    $('#category_filter').on('change', function() {
+        fetchFilteredProperties();
+    });
+
+    $('#search-button').on('click', function(e) {
+        e.preventDefault();
+        fetchFilteredProperties();
+    });
+
+    function fetchFilteredProperties() {
+        var category = $('#category_filter').val();
+        var location = $('#location').val();
+
+        $.ajax({
+            url: '{{ route("filter.properties") }}',
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                category: category,
+                location: location
+            },
+            success: function(response) {
+                $('#property-list').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+});
+
+</script>
+
 @endsection

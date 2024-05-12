@@ -8,7 +8,9 @@
         "php": "^8.2",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "mcamara/laravel-localization": "^2.0",
+        "stichoza/google-translate-php": "^5.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -43,7 +43,9 @@
                     <h3 class="card-title">{{ $property->name }}</h3>
                     <div class="col-md-6 offset-md-6"> 
                         <div class="text-center mb-4">
-                                <img src="{{ asset('storage/users/' . $property->owner->image) }}" class="rounded-circle" alt="Owner Image" style="width: 150px;">
+                                {{-- <img src="{{ asset('storage/users/' . $property->owner->image) }}" class="rounded-circle" alt="Owner Image" style="width: 150px;"> --}}
+                                <img class="img-fluid"  style="width: 310px; height:250px; " src="{{ asset('storage/users/' . $property->owner->image) }}" alt="{{  $property->owner->name }}">
+
                                 <h4 class="mt-2"><strong>Owner :</strong> {{ $property->owner->name }}</h4>
                                 <p><i class="fa fa-envelope text-primary me-2"></i> {{ $property->owner->email }}</p>
                                 <p><i class="fa fa-phone text-primary me-2"></i> {{ $property->owner->phone }}</p>

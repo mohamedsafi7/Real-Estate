@@ -13,14 +13,15 @@ class PropretyController extends Controller
 {
     public function get()
     {
-        $properties = Proprety::with('images')->get();
-    
+        $listings = Proprety::where('validated', true)->with(['listingType', 'category', 'images'])->get();
+        $properties = Proprety::where('validated', true)->with('images')->take(12)->get();
+        $categories = Category::all();
         // Loop through properties and keep only the first image
         $properties->each(function ($property) {
             $property->first_image = $property->images->isNotEmpty() ? $property->images->first()->image_path : null;
         });
     
-        return view('proprety.proprety', compact('properties'));
+        return view('proprety.proprety', compact('properties','listings','categories'));
     }
 
     public function create()

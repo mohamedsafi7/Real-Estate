@@ -11,6 +11,24 @@ use App\Http\Controllers\FilterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PropretyController;
+use App\Http\Controllers\TestController;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
+Route::get('/test', function(){
+    return view('test');
+});
+
+Route::get('/translate', function () {
+    $lang = new GoogleTranslate('en');
+
+    $lang->setSource('en')->setTarget('en');
+
+    $viewContent = file_get_contents(resource_path('views/test.blade.php'));
+
+    $translatedContent = $lang->translate($viewContent);
+
+    return $translatedContent;
+});
 
 // authentification
 Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
@@ -27,10 +45,11 @@ Route::get('/', [HomeController::class, 'get'])->name('index')->middleware('auth
 
 // Routes for Authenticated Users
 Route::middleware([Authenticate::class])->group(function () {
-    Route::get('/filtered', [FilterController::class, 'show'])->name('show');
+    // Route::get('/filtered', [FilterController::class, 'show'])->name('show');
+    Route::get('/filter/properties', [FilterController::class,'filterProperties'])->name('filter.properties');
 
     // Categories
-    Route::get('/categories/{category}', [FilterController::class, 'show'])->name('categories.show');
+    // Route::get('/categories/{category}', [FilterController::class, 'show'])->name('categories.show');
     Route::get('/categories', [CategoryController::class, 'get'])->name('categories.index');
     Route::get('/createcategories', [CategoryController::class, 'create'])->name('createcategories');
     Route::post('/addcategory', [CategoryController::class, 'add'])->name('categories.add');

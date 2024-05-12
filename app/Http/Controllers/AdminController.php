@@ -8,14 +8,30 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // $unvalidatedProperties = Proprety::where('validated', false)->get();
-        // $properties = Proprety::with('images')->paginate(6);
-        $properties = Proprety::with('images')->get();
-
+        // Initialize the query builder
+        $properties = Proprety::query();
+    
+        // Check if the 'validated' parameter exists in the request
+        if ($request->has('validated')) {
+            // Convert the parameter value to boolean
+            $validated = $request->validated == '1';
+    
+            // Filter properties based on the validation status
+            $properties->where('validated', $validated);
+        }
+    
+        // Fetch properties with images, ordered by creation date, and paginate the results
+        $properties = $properties->with('images')->orderBy('created_at', 'desc')->paginate(12);
+    
+        // Pass the filtered properties to the view
         return view('admin.index', compact('properties'));
     }
+    
+    
+    
+    
     public function users(){
         $users = User::all();
         return view('admin.users', compact('users'));
