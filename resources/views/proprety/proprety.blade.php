@@ -23,18 +23,17 @@
                                             </div>
                                             
                                             <div class="col-md-4 position-relative">
-                                                <input id="location" name="location" type="text" list="location_datalist" class="form-control border-0 py-3" placeholder="Location">
+                                                <input id="location" name="location_filter" type="text" list="location_datalist" class="form-control border-0 py-3" placeholder="Location">
                                                 <datalist id="location_datalist">
                                                     <option selected disabled>Location</option>
-                                                    @php
-                                                        $uniqueCities = $listings->unique('city');
-                                                    @endphp
-                                                    @foreach ($uniqueCities as $property)
-                                                        <option>{{ $property->city }}</option>
+                                                    @foreach ($uniqueCities as $item)
+                                                        <option>{{ is_object($item) ? $item->city : $item }}</option>
                                                     @endforeach
+                                                
                                                 </datalist>
-                                                {{-- <i class="bi bi-search position-absolute top-50 start-50 translate-middle" style="transform: translate(-50%, -50%);"></i> --}}
                                             </div>
+                                            
+                                            
                                             
                                         </div>
                                     </div>
@@ -46,12 +45,20 @@
                         </div>
                         
                         <!-- Search End -->
-                                <!-- Filter buttons -->
+                                {{-- <!-- Filter buttons -->
                                 <div class="col-md-12 mb-3 mt-1">
                                     <button class="btn btn-primary me-2 filter-btn" data-filter="all">All</button>
                                     <button class="btn btn-outline-primary filter-btn" data-filter="sell">For Sale</button>
                                     <button class="btn btn-outline-primary filter-btn" data-filter="rent">For Rent</button>
+                                </div> --}}
+                                <!-- Filter Buttons -->
+                                <div class="mb-4">
+                                    <a href="{{ route('properties.index', ['validated' => 1]) }}" class="btn btn-secondary {{ Request::get('listingType') == null ? 'active' : '' }}">All</a>
+
+                                    <a href="{{ route('properties.index', ['validated' => 1, 'listingType' => 'sell']) }}" class="btn btn-primary {{ Request::get('listingType') == 'sell' ? 'active' : '' }}">Sell</a>
+                                    <a href="{{ route('properties.index', ['validated' => 1, 'listingType' => 'rent']) }}" class="btn btn-warning {{ Request::get('listingType') == 'rent' ? 'active' : '' }}">Rent</a>
                                 </div>
+
                         
 
                                 @foreach ($properties as $property)
@@ -70,7 +77,7 @@
                         
                                             <!-- Display property image -->
                                             @if ($property->images->count() > 0)
-                                            <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}"><img class="img-fluid" style="height: 300px;" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
+                                            <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}"><img class="img-fluid" style="height: 300px; width:500px;" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
                                             @endif
                                         </div>
                         
@@ -78,7 +85,7 @@
                                         <div class="p-4 pb-0">
                                             <h5 class="text-primary mb-3">${{ $property->price }}</h5>
                                             <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}">{{ $property->name }}</a>
-                                            <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->address }}</p>
+                                            <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->city }}</p>
                                             
                                         </div>
                         

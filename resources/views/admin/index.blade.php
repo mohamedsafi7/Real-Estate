@@ -4,7 +4,6 @@
     <div class="container">
         <h1 class="mt-4">Admin Panel - Table of Properties</h1>
 
-        <!-- Filter Buttons -->
 <!-- Filter Buttons -->
 <div class="mb-4">
     <a href="{{ route('admin.index', ['validated' => 1]) }}" class="btn btn-primary {{ Request::get('validated') == '1' ? 'active' : '' }}">Validated</a>

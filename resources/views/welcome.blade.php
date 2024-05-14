@@ -165,7 +165,7 @@
                         </div>
                         <div class="row mt-4">
                             <div class="col-12 text-center">
-                                <a href="#" class="btn btn-secondary">Show more places for rent</a>
+                                <a href="{{ route('properties.index', ['listingType' => 'rent']) }}" class="btn btn-secondary">Show more places for rent</a>
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -226,7 +226,7 @@
                     </div>
                     <div class="row mt-4">
                         <div class="col-12 text-center">
-                            <a href="#" class="btn btn-primary">Show more places for sell</a>
+                            <a href="{{ route('properties.index', ['listingType' => 'sell']) }}" class="btn btn-primary">Show more places for sell</a>
                         </div>
                     </div>
                         </div>

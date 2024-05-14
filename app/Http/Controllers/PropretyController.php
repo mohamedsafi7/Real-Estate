@@ -11,18 +11,58 @@ use Illuminate\Support\Facades\Auth;
 
 class PropretyController extends Controller
 {
-    public function get()
-    {
-        $listings = Proprety::where('validated', true)->with(['listingType', 'category', 'images'])->get();
-        $properties = Proprety::where('validated', true)->with('images')->take(12)->get();
-        $categories = Category::all();
-        // Loop through properties and keep only the first image
-        $properties->each(function ($property) {
-            $property->first_image = $property->images->isNotEmpty() ? $property->images->first()->image_path : null;
-        });
-    
-        return view('proprety.proprety', compact('properties','listings','categories'));
+    public function get(Request $request)
+{
+    $listings = Proprety::where('validated', true)->with(['listingType', 'category', 'images'])->get();
+    $categories = Category::all();
+    $properties = Proprety::query();
+
+    // Check if the 'validated' parameter exists in the request
+    if ($request->has('validated')) {
+        // Convert the parameter value to boolean
+        $validated = $request->validated == '1';
+
+        // Filter properties based on the validation status
+        $properties->where('validated', $validated);
     }
+
+    // Check if the 'listingType' parameter exists in the request
+    if ($request->has('listingType')) {
+        // Filter properties based on the listing type
+        $properties->whereHas('listingType', function ($query) use ($request) {
+            $query->where('name', $request->listingType);
+        });
+    }
+
+    // Check if the 'category_filter' parameter exists in the request
+    if ($request->has('category_filter')) {
+        // Filter properties based on the category
+        $properties->whereHas('category', function ($query) use ($request) {
+            $query->where('name', $request->category_filter);
+        });
+    }
+    if ($request->has('location_filter')) {
+        $locationFilter = strtolower($request->input('location_filter')); // Convert input to lowercase
+        $properties->whereRaw('LOWER(city) LIKE ?', ["%$locationFilter%"]); // Compare case-insensitively
+    }
+
+    // Fetch properties with images, ordered by creation date, and paginate the results
+    $properties = $properties->with('images')->orderBy('created_at', 'desc')->paginate(12);
+
+    // Get unique cities from properties
+    $uniqueCities = $listings->pluck('city')->unique(); // Adjust this line
+
+
+    // Loop through properties and keep only the first image
+    $properties->each(function ($property) {
+        $property->first_image = $property->images->isNotEmpty() ? $property->images->first()->image_path : null;
+    });
+
+    return view('proprety.proprety', compact('properties', 'listings', 'categories', 'uniqueCities'));
+}
+
+    
+    
 
     public function create()
 {

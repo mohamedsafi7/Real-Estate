@@ -46,7 +46,7 @@ Route::get('/', [HomeController::class, 'get'])->name('index')->middleware('auth
 // Routes for Authenticated Users
 Route::middleware([Authenticate::class])->group(function () {
     // Route::get('/filtered', [FilterController::class, 'show'])->name('show');
-    Route::get('/filter/properties', [FilterController::class,'filterProperties'])->name('filter.properties');
+    // Route::get('/filter/properties', [FilterController::class,'filterProperties'])->name('filter.properties');
 
     // Categories
     // Route::get('/categories/{category}', [FilterController::class, 'show'])->name('categories.show');
@@ -57,6 +57,7 @@ Route::middleware([Authenticate::class])->group(function () {
     // Properties
     Route::get('/properties', [PropretyController::class, 'get'])->name('properties.index');
     Route::get('/createproperties', [PropretyController::class, 'create'])->name('createproperties');
+    Route::get('/filter/properties', [PropretyController::class, 'get'])->name('filter.properties');
     Route::get('/editproperties/{id}', [PropretyController::class, 'edit'])->name('editproperty');
     Route::get('/showproperty/{id}', [PropretyController::class, 'show'])->name('property.show');
     Route::post('/addproprety', [PropretyController::class, 'add'])->name('addproprety');
