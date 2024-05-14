@@ -85,7 +85,7 @@
                                         <div class="p-4 pb-0">
                                             <h5 class="text-primary mb-3">${{ $property->price }}</h5>
                                             <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}">{{ $property->name }}</a>
-                                            <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->city }}</p>
+                                            <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->city }}  </p>
                                             
                                         </div>
                         

@@ -17,8 +17,9 @@
                 <tr>
                     <th>Image</th>
                     <th>Name</th>
-                    <th>Address</th>
-                    <th>status</th>
+                    <th>Owner</th>
+                    <th>Location</th>
+                    {{-- <th>status</th> --}}
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -31,8 +32,9 @@
                             @endif
                         </td>
                         <td>{{ $property->name }}</td>
-                        <td>{{ $property->address }}</td>
-                        <td>{{ $property->validated }}</td>
+                        <td>{{ $property->owner->name }} <p>{{ $property->owner->phone }}</p></td>
+                        <td>{{ $property->city }},  {{ $property->address }}</td>
+                        {{-- <td>{{ $property->validated }}</td> --}}
  
                         <td>
                             @if (!$property->validated)
