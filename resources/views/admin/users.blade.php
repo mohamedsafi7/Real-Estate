@@ -8,6 +8,8 @@
                 <tr>
                     <th>Image</th>
                     <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
                     <th>Role</th>
                     <th>Actions</th>
 
@@ -23,7 +25,13 @@
                                 <img class="img-fluid" style="width: 50px; height: 50px; border-radius: 50%;" src="{{ asset('generic.jpg') }}" alt="Anonymous">
                             @endif
                         </td>
-                        <td>{{ $user->name }}</td> 
+                        <td>{{ $user->name }}</td>
+                        @if ($user->phone)
+                            <td>{{ $user->phone }}</td> 
+                        @else
+                            <td>no Phone</td>
+                        @endif 
+                        <td>{{ $user->email }}</td> 
                         <td>{{ $user->role }}</td> 
                         <td>
                             @if (!$user->isAdmin())

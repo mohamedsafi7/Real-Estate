@@ -36,7 +36,8 @@
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Profile</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 @auth
-                                    <a href="profile" class="dropdown-item">{{ auth()->user()->name }}</a>
+                                    <a href="{{route('profile')}}" class="dropdown-item">{{ auth()->user()->name }}</a>
+                                    <a href="{{route('reservations')}}" class="dropdown-item">Reservations</a>
                                     @if (auth()->user()->isAdmin())
                                         <a href="{{route('admin.index')}}" class="dropdown-item">Dashboard</a>
                                         <a href="{{route('admin.userslist')}}" class="dropdown-item">Users</a>

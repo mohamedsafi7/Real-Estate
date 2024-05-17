@@ -39,5 +39,11 @@ class Proprety extends Model
     {
         return $this->hasMany(PropretyImage::class, 'property_id');
     }
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'property_id');
+    }
+
+
     
 }

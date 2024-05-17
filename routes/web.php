@@ -13,15 +13,18 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PropretyController;
 use App\Http\Controllers\TestController;
 use Stichoza\GoogleTranslate\GoogleTranslate;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\OwnerController;
 
-Route::get('/test', function(){
-    return view('test');
-});
+
+// Route::get('/test', function(){
+//     return view('test');
+// });
 
 Route::get('/translate', function () {
-    $lang = new GoogleTranslate('en');
+    $lang = new GoogleTranslate('ar');
 
-    $lang->setSource('en')->setTarget('en');
+    $lang->setSource('ar')->setTarget('ar');
 
     $viewContent = file_get_contents(resource_path('views/test.blade.php'));
 
@@ -71,6 +74,17 @@ Route::middleware([Authenticate::class])->group(function () {
     Route::get('/profile', [ProfileController::class, 'get'])->name('profile');
     Route::get('/editprofile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
+
+    //Reservation
+    Route::post('/reservations/{property}', [ReservationController::class, 'store'])->name('reservations.store');
+
+    Route::get('/owner/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard');
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations');
+    Route::post('/reservations/{reservation}/approve', [OwnerController::class, 'approve'])->name('reservations.approve');
+    Route::post('/reservations/{reservation}/reject', [OwnerController::class, 'reject'])->name('reservations.reject');
+
+    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
 
     Route::middleware([AdminMiddleware::class])->group(function () {
     //admin 

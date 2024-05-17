@@ -3,10 +3,10 @@
 <div class="container" enctype="multipart/form-data">
     <div class="row justify-content-center">
         <div class="col-lg-3 col-md-6 wow fadeInUp mb-4" data-wow-delay="0.3s">
-            <div class="team-item rounded overflow-hidden mt-4" >
+            <div class="team-item rounded overflow-hidden mt-4">
                 <div class="position-relative">
                     @if ($user->image)
-                        <img class="img-fluid"  style="width: 310px; height:250px; " src="{{ asset('storage/users/' . $user->image) }}" alt="{{ $user->name }}">
+                        <img class="img-fluid" style="width: 310px; height:250px;" src="{{ asset('storage/users/' . $user->image) }}" alt="{{ $user->name }}">
                     @else
                         <img class="img-fluid" src="{{ asset('generic.jpg') }}" alt="Anonymous">
                     @endif
@@ -26,6 +26,8 @@
             </div>
         </div>
     </div>
+
+
     <div class="row">
         @foreach ($pubs as $pub)
             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -38,12 +40,24 @@
                         @endif
                         <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $pub->category->name }}</div>
                         @if ($pub->images->count() > 0)
-                            <a href=""><img class="img-fluid" src="{{ asset('storage/images/' . $pub->images->first()->image_path) }}" alt=""></a>
+                            <a href="{{ route('property.show', ['id' => $pub->id]) }}"><img class="img-fluid" src="{{ asset('storage/images/' . $pub->images->first()->image_path) }}" alt=""></a>
                         @endif
                     </div>
                     <div class="p-4 pb-0">
                         <h5 class="text-primary mb-3">${{ $pub->price }}</h5>
-                        <a class="d-block h5 mb-2" href="">{{ $pub->name }}</a>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $pub->id]) }}">
+                                {{ $pub->name }}
+                            </a>
+                            @php
+                                $reservationCount = $pub->reservations->count();
+                            @endphp
+                            @if ($reservationCount > 1 || ($reservationCount == 1 && ($pub->reservations->first()->status != 'approved' && $pub->reservations->first()->status != 'rejected')))
+                                <span class="badge bg-success">
+                                    <i class="fas fa-bell"></i> {{ $reservationCount }}
+                                </span>
+                            @endif
+                        </div>
                         <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $pub->city }}</p>
                     </div>
                     <div class="d-flex border-top">
@@ -63,5 +77,6 @@
             </div>
         @endforeach
     </div>
+
 </div>
 @endsection
