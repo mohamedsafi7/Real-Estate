@@ -32,7 +32,12 @@
                     <tbody>
                         @foreach($reservations as $reservation)
                             <tr>
-                                <td>{{ optional($reservation->proprety)->name }}</td>
+                                <td>
+                                    <a href="{{ route('property.show', $reservation->proprety->id) }}">
+                                        <img src="{{ asset('storage/images/' . $reservation->proprety->images->first()->image_path) }}" class="img-thumbnail" style="width: 100px; height: auto;" alt="Property Image">
+                                        {{ optional($reservation->proprety)->name }}
+                                    </a>
+                                </td>
                                 <td>{{ optional($reservation->user)->name }}</td>
                                 <td>{{ $reservation->check_in }}</td>
                                 <td>{{ $reservation->check_out }}</td>

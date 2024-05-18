@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container" enctype="multipart/form-data">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-4">
         <div class="row">
             @if(auth()->check() && auth()->user()->reservations->count() > 0)
                 <div class="col-lg-12">
@@ -15,13 +15,18 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     @if ($reservation->property->images->count() > 0)
-                                                        <img class="img-fluid" src="{{ asset('storage/images/' . $reservation->property->images->first()->image_path) }}" alt="Property Image">
+                                                        <a href="{{ route('property.show', $reservation->property->id) }}">
+                                                            <img class="img-fluid" src="{{ asset('storage/images/' . $reservation->property->images->first()->image_path) }}" alt="Property Image">
+                                                        </a>
                                                     @else
-                                                        <img class="img-fluid" src="{{ asset('generic.jpg') }}" alt="No Image">
+                                                        <a href="{{ route('property.show', $reservation->property->id) }}">
+                                                            <img class="img-fluid" src="{{ asset('generic.jpg') }}" alt="No Image">
+                                                        </a>
                                                     @endif
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <h5>{{ $reservation->property->name }}</h5>
+                                                    <a href="{{ route('property.show', $reservation->property->id) }}">
+                                                    <h5>{{ $reservation->property->name }}</h5></a>
                                                     <p>
                                                         <strong>Status:</strong> 
                                                         <span class="
