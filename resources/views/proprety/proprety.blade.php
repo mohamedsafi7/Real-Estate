@@ -3,43 +3,58 @@
 @section('content')
 <div class="container">
     <div class="row" enctype="multipart/form-data" id="property-list">
-        <!-- Search Start -->
-        <div class="container-fluid bg-primary mb-4 wow fadeIn mt-4" data-wow-delay="0.1s" style="padding: 35px;">
-            <div class="container">
-                <form action="{{ route('filter.properties') }}" method="GET" class="row g-2">
-                    <div class="col-md-10">
-                        <div class="row g-2">
-                            <div class="col-md-4">
-                                <input type="text" class="form-control border-0 py-3" placeholder="Search Keyword">
-                            </div>
-                            <div class="col-md-4">
-                                <select class="form-select border-0 py-3" name="category_filter" id="category_filter">
-                                    <option selected>Property Category</option>
-                                    @foreach ($categories as $category)
-                                        <option>{{ $category->name }}</option>
+<!-- Search Start -->
+<div class="container-fluid bg-primary mb-4 wow fadeIn mt-4" data-wow-delay="0.1s" style="padding: 35px;">
+    <div class="container">
+        <form action="{{ route('filter.properties') }}" method="GET" class="row g-2">
+            <div class="col-md-10">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control border-0 py-3" placeholder="Search Keyword">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select border-0 py-3" name="category_filter" id="category_filter">
+                            <option selected>Property Category</option>
+                            @foreach ($categories as $category)
+                                <option>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 position-relative">
+                        <input id="location" name="location_filter" type="text" list="location_datalist" class="form-control border-0 py-3" placeholder="Location">
+                        <datalist id="location_datalist">
+                            <option selected disabled>Location</option>
+                            @foreach ($uniqueCities as $item)
+                                <option>{{ is_object($item) ? $item->city : $item }}</option>
+                            @endforeach
+                        </datalist>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select border-0 py-3" name="tags[]" id="tags" multiple>
+                            <option disabled>Select Tags</option>
+          
+                            @foreach ($properties as $property)
+                                @if ($property->tagsArray)
+                                    @foreach ($property->tagsArray as $tag)
+                                        <option>{{ $tag }}</option>
                                     @endforeach
-                                </select>
-                            </div>
+                                @endif
+                            @endforeach
                             
-                            <div class="col-md-4 position-relative">
-                                <input id="location" name="location_filter" type="text" list="location_datalist" class="form-control border-0 py-3" placeholder="Location">
-                                <datalist id="location_datalist">
-                                    <option selected disabled>Location</option>
-                                    @foreach ($uniqueCities as $item)
-                                        <option>{{ is_object($item) ? $item->city : $item }}</option>
-                                    @endforeach
-                                </datalist>
-                            </div>
-                        </div>
+
+
+                        </select>
                     </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-dark border-0 w-100 py-3">Search</button>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
-        
-        <!-- Search End -->
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-dark border-0 w-100 py-3">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Search End -->
+
 
         <!-- Filter Buttons -->
         <div class="mb-4">

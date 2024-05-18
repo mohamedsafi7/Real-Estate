@@ -9,24 +9,25 @@ class Proprety extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 
-        'city',
-        'address',
-        'price',
-        'size',
-        'bedrooms',
-        'bathrooms',
-        'description',
-        'category_id',
-        'listing_type_id',
-        'user_id',
-        
+        'name', 'city', 'address', 'price', 'size', 'bedrooms', 'bathrooms', 'description', 'category_id', 'listing_type_id', 'user_id','tags'
     ];
     use HasFactory;
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
     }
+    public function getTagsAttribute($value)
+    {
+        return json_decode($value);
+    }
+    public function getTagsArrayAttribute()
+{
+    return $this->tags;
+}
+    // public function getTagsArrayAttribute()
+    // {
+    //     return json_decode($this->tags);
+    // }
     public function category()
     {
         return $this->belongsTo(Category::class);

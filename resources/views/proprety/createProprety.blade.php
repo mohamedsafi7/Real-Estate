@@ -94,13 +94,33 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tags">Tags</label>
-                            <select multiple class="form-control" id="tags" name="tags[]">
-                                @foreach ($tags as $tag)
-                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
-                                @endforeach
-                            </select>
+                            <label for="tags" class="col-md-4 col-form-label text-md-right">{{ __('Tags') }}</label>
+                            <div class="col-md-6">
+                                <select id="tags" name="tags[]" class="form-control" multiple>
+                                <option value="Pool">Pool</option>
+                                <option value="Parking">Parking</option>
+                                <option value="Garage">Garage</option>
+                                <option value="Garden">Garden</option>
+                                <option value="Balcony">Balcony</option>
+                                <option value="Terrace">Terrace</option>
+                                <option value="Fireplace">Fireplace</option>
+                                <option value="Basement">Basement</option>
+                                <option value="Air Conditioning">Air Conditioning</option>
+                                <option value="Central Heating">Central Heating</option>
+                                <option value="Security System">Security System</option>
+                                <option value="Furnished">Furnished</option>
+                                <option value="Unfurnished">Unfurnished</option>
+                                <option value="Sea View">Sea View</option>
+                                <option value="Mountain View">Mountain View</option>
+                                <option value="City View">City View</option>
+                                <option value="Pet Friendly">Pet Friendly</option>
+                                <option value="Near Public Transport">Near Public Transport</option>
+                                <option value="Gym">Gym</option>
+                                <option value="Elevator">Elevator</option>
+                                </select>
+                            </div>
                         </div>
+
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">

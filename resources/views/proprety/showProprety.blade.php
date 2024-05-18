@@ -44,6 +44,24 @@
                     <p class="card-text"><strong>Beds:</strong> <i class="fa fa-bed text-primary me-2"></i>{{ $property->bedrooms }}</p>
                     <p class="card-text"><strong>Baths:</strong> <i class="fa fa-bath text-primary me-2"></i>{{ $property->bathrooms }}</p>
                     <p class="card-text"><strong>Description:</strong> <i class="fa fa-info-circle text-primary me-2"></i>{{ $property->description }}</p>
+
+                   <!-- Tags -->
+                   <p class="card-text"><strong>Tags:</strong>
+                        @if($property->tags)
+                            @php
+                                $tagsArray = json_decode($property->tags, true);
+                            @endphp
+                            <ul>
+                                @foreach($tagsArray as $tag)
+                                    <li>{{ $tag }}</li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <span>No tags available</span>
+                        @endif
+                    </p>
+
+   
                 </div>
             </div>
         </div>

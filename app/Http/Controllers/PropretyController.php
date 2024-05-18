@@ -6,61 +6,64 @@ use App\Models\Category;
 use App\Models\ListingType;
 use App\Models\Proprety;
 use App\Models\PropretyImage;
-use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class PropretyController extends Controller
 {
     public function get(Request $request)
-{
-    $listings = Proprety::where('validated', true)->with(['listingType', 'category', 'images'])->get();
-    $categories = Category::all();
-    $properties = Proprety::query();
-
-    // Check if the 'validated' parameter exists in the request
-    if ($request->has('validated')) {
-        // Convert the parameter value to boolean
-        $validated = $request->validated == '1';
-
-        // Filter properties based on the validation status
-        $properties->where('validated', $validated);
+    {
+        // Fetch all listings
+        $listings = Proprety::where('validated', true)->with(['listingType', 'category', 'images'])->get();
+        
+        // Fetch all categories
+        $categories = Category::all();
+        
+        // Fetch all properties
+        $properties = Proprety::query();
+    
+        // Check if the 'validated' parameter exists in the request
+        if ($request->has('validated')) {
+            // Convert the parameter value to boolean
+            $validated = $request->validated == '1';
+    
+            // Filter properties based on the validation status
+            $properties->where('validated', $validated);
+        }
+    
+        // Check if the 'listingType' parameter exists in the request
+        if ($request->has('listingType')) {
+            // Filter properties based on the listing type
+            $properties->whereHas('listingType', function ($query) use ($request) {
+                $query->where('name', $request->listingType);
+            });
+        }
+    
+        // Check if the 'category_filter' parameter exists in the request
+        if ($request->has('category_filter')) {
+            // Filter properties based on the category
+            $properties->whereHas('category', function ($query) use ($request) {
+                $query->where('name', $request->category_filter);
+            });
+        }
+        
+        // Check if the 'location_filter' parameter exists in the request
+        if ($request->has('location_filter')) {
+            $locationFilter = strtolower($request->input('location_filter')); // Convert input to lowercase
+            $properties->whereRaw('LOWER(city) LIKE ?', ["%$locationFilter%"]); // Compare case-insensitively
+        }
+    
+        // Fetch properties with images, tags, ordered by creation date, and paginate the results
+        $properties = $properties->orderBy('created_at', 'desc')->paginate(12);
+    
+        // Get unique cities from listings
+        $uniqueCities = $listings->pluck('city')->unique();
+    
+        return view('proprety.proprety', compact('properties', 'listings', 'categories', 'uniqueCities'));
     }
-
-    // Check if the 'listingType' parameter exists in the request
-    if ($request->has('listingType')) {
-        // Filter properties based on the listing type
-        $properties->whereHas('listingType', function ($query) use ($request) {
-            $query->where('name', $request->listingType);
-        });
-    }
-
-    // Check if the 'category_filter' parameter exists in the request
-    if ($request->has('category_filter')) {
-        // Filter properties based on the category
-        $properties->whereHas('category', function ($query) use ($request) {
-            $query->where('name', $request->category_filter);
-        });
-    }
-    if ($request->has('location_filter')) {
-        $locationFilter = strtolower($request->input('location_filter')); // Convert input to lowercase
-        $properties->whereRaw('LOWER(city) LIKE ?', ["%$locationFilter%"]); // Compare case-insensitively
-    }
-
-    // Fetch properties with images, ordered by creation date, and paginate the results
-    $properties = $properties->with('images')->orderBy('created_at', 'desc')->paginate(12);
-
-    // Get unique cities from properties
-    $uniqueCities = $listings->pluck('city')->unique(); // Adjust this line
-
-
-    // Loop through properties and keep only the first image
-    $properties->each(function ($property) {
-        $property->first_image = $property->images->isNotEmpty() ? $property->images->first()->image_path : null;
-    });
-
-    return view('proprety.proprety', compact('properties', 'listings', 'categories', 'uniqueCities'));
-}
+    
+    
 
     
     
@@ -68,9 +71,8 @@ class PropretyController extends Controller
     public function create()
 {
     $categories = Category::all();
-    $tags = Tag::all();
     $listingTypes = ListingType::all();
-    return view('proprety.createProprety', compact('categories', 'listingTypes', 'tags'));
+    return view('proprety.createProprety', compact('categories', 'listingTypes'));
 }
 
 public function add(Request $request)
@@ -87,30 +89,33 @@ public function add(Request $request)
             'property-category' => 'required|exists:categories,id',
             'listing-type' => 'required|exists:listing_types,id',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp',
-            'tags' => 'nullable|array',
 
         ]);
+
         $userId = Auth::id();
 
         // Create property
-        $property = Proprety::create([
-            'name' => $request->input('name'),
-            'city' => $request->input('city'),
-            'address' => $request->input('address'),
-            'price' => $request->input('price'),
-            'size' => $request->input('size'),
-            'bedrooms' => $request->input('bedrooms'),
-            'bathrooms' => $request->input('bathrooms'),
-            'description' => $request->input('description'),
-            'category_id' => $request->input('property-category'),
-            'listing_type_id' => $request->input('listing-type'),
-            'tags' => $request->input('tags'),
-            'user_id' => $userId
-        ]);
+        $property = new Proprety();
+        $property->name = $request->input('name');
+        $property->city = $request->input('city');
+        $property->address = $request->input('address');
+        $property->price = $request->input('price');
+        $property->size = $request->input('size');
+        $property->bedrooms = $request->input('bedrooms');
+        $property->bathrooms = $request->input('bathrooms');
+        $property->description = $request->input('description');
+        $property->category_id = $request->input('property-category');
+        $property->listing_type_id = $request->input('listing-type');
+        $property->user_id = auth()->id(); 
+
         if ($request->has('tags')) {
-            $property->tags()->attach($request->input('tags'));
+            $property->tags = json_encode($request->input('tags'));
         }
-        
+    
+        $property->save();
+        // if ($request->has('tags')) {
+        //     $property->tags = implode(',', $request->input('tags'));
+        // }
         // Handle property images
         // Handle property images
         if ($request->hasFile('images')) {
@@ -124,7 +129,7 @@ public function add(Request $request)
             }
         }
 
-        return redirect()->route('index');
+        return redirect()->route('property.show', $property->id);
     }
 
 
@@ -142,6 +147,8 @@ public function add(Request $request)
         $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp', 
         ]);
+
+
         $property->update($request->all());
         return redirect()->route('profile'); 
         
@@ -152,34 +159,57 @@ public function add(Request $request)
         return view('proprety.showProprety', compact('property'));
     }
     public function filterProperties(Request $request)
-{
-    $query = Proprety::query();
-
-    // Apply location filter if present
-    if ($request->filled('location_filter')) {
-        $query->where('city', $request->input('location_filter'));
-    }
-
-    // Apply category filter if present
-    if ($request->filled('category_filter') && $request->input('category_filter') != 'Property Category') {
-        $category = Category::where('name', $request->input('category_filter'))->first();
-        if ($category) {
-            $query->where('category_id', $category->id);
+    {
+        $query = Proprety::query();
+    
+        // Apply location filter if present
+        if ($request->filled('location_filter')) {
+            $query->where('city', $request->input('location_filter'));
         }
+    
+        // Apply category filter if present
+        if ($request->filled('category_filter') && $request->input('category_filter') != 'Property Category') {
+            $category = Category::where('name', $request->input('category_filter'))->first();
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
+        }
+    
+        // Apply tags filter if present
+        if ($request->filled('tags')) {
+            $tags = $request->input('tags');
+            $query->where(function ($q) use ($tags) {
+                foreach ($tags as $tag) {
+                    $q->orWhere('tags', 'like', '%"'.$tag.'"%');
+                }
+            });
+        }
+    
+        // Fetch the filtered properties
+        $properties = $query->get();
+    
+        // Fetch unique categories and cities for the filters
+        $categories = Category::all();
+        $uniqueCities = Proprety::select('city')->distinct()->get();
+    
+        // Fetch all unique tags
+            $tagsArray = Proprety::select('tags')->distinct()->get()->pluck('tags')->flatten()->toArray();
+            $tags = [];
+
+            foreach ($tagsArray as $tagString) {
+                if ($tagString !== null) {
+                    $decodedTags = json_decode($tagString, true);
+                    if ($decodedTags !== null) {
+                        $tags = array_merge($tags, $decodedTags);
+                    }
+                }
+            }
+
+    
+        // Redirect back to the properties view with filtered data
+        return view('proprety.proprety', compact('properties', 'categories', 'uniqueCities', 'tags'));
     }
-
-    // Apply other filters here if necessary
-
-    // Fetch the filtered properties
-    $properties = $query->get();
-
-    // Fetch unique categories and cities for the filters
-    $categories = Category::all();
-    $uniqueCities = Proprety::select('city')->distinct()->get();
-
-    // Redirect back to the properties view with filtered data
-    return view('proprety.proprety', compact('properties', 'categories', 'uniqueCities'));
-}
+    
 
 
     public function destroy($id){
