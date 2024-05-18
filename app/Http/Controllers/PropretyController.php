@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\ListingType;
 use App\Models\Proprety;
 use App\Models\PropretyImage;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -67,8 +68,9 @@ class PropretyController extends Controller
     public function create()
 {
     $categories = Category::all();
+    $tags = Tag::all();
     $listingTypes = ListingType::all();
-    return view('proprety.createProprety', compact('categories', 'listingTypes'));
+    return view('proprety.createProprety', compact('categories', 'listingTypes', 'tags'));
 }
 
 public function add(Request $request)
@@ -84,7 +86,9 @@ public function add(Request $request)
             'description' => 'required|string',
             'property-category' => 'required|exists:categories,id',
             'listing-type' => 'required|exists:listing_types,id',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp' // Validate each image
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp',
+            'tags' => 'nullable|array',
+
         ]);
         $userId = Auth::id();
 
@@ -100,8 +104,12 @@ public function add(Request $request)
             'description' => $request->input('description'),
             'category_id' => $request->input('property-category'),
             'listing_type_id' => $request->input('listing-type'),
+            'tags' => $request->input('tags'),
             'user_id' => $userId
         ]);
+        if ($request->has('tags')) {
+            $property->tags()->attach($request->input('tags'));
+        }
         
         // Handle property images
         // Handle property images
@@ -143,6 +151,35 @@ public function add(Request $request)
         $property = Proprety::with('owner')->findOrFail($id);
         return view('proprety.showProprety', compact('property'));
     }
+    public function filterProperties(Request $request)
+{
+    $query = Proprety::query();
+
+    // Apply location filter if present
+    if ($request->filled('location_filter')) {
+        $query->where('city', $request->input('location_filter'));
+    }
+
+    // Apply category filter if present
+    if ($request->filled('category_filter') && $request->input('category_filter') != 'Property Category') {
+        $category = Category::where('name', $request->input('category_filter'))->first();
+        if ($category) {
+            $query->where('category_id', $category->id);
+        }
+    }
+
+    // Apply other filters here if necessary
+
+    // Fetch the filtered properties
+    $properties = $query->get();
+
+    // Fetch unique categories and cities for the filters
+    $categories = Category::all();
+    $uniqueCities = Proprety::select('city')->distinct()->get();
+
+    // Redirect back to the properties view with filtered data
+    return view('proprety.proprety', compact('properties', 'categories', 'uniqueCities'));
+}
 
 
     public function destroy($id){

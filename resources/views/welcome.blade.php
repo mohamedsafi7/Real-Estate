@@ -25,47 +25,42 @@
         </div>
         <!-- Header End -->
                 <!-- Search Start -->
-                <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
-                    <div class="container">
-                        <form action="{{ route('filter.properties') }}" method="GET" class="row g-2">
-                            <div class="col-md-10">
-                                <div class="row g-2">
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control border-0 py-3" placeholder="Search Keyword">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <select class="form-select border-0 py-3" name="category_filter" id="category_filter">
-                                            <option selected>Property Category</option>
-                                            @foreach ($categories as $category)
-                                                <option>{{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="col-md-4 position-relative">
-                                        <input id="location" name="location" type="text" list="location_datalist" class="form-control border-0 py-3" placeholder="Location">
-                                        <datalist id="location_datalist">
-                                            <option selected disabled>Location</option>
-                                            @php
-                                                $uniqueCities = $listings->unique('city');
-                                            @endphp
-                                            @foreach ($uniqueCities as $property)
-                                                <option>{{ $property->city }}</option>
-                                            @endforeach
-                                        </datalist>
-                                        {{-- <i class="bi bi-search position-absolute top-50 start-50 translate-middle" style="transform: translate(-50%, -50%);"></i> --}}
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-dark border-0 w-100 py-3">Search</button>
-                            </div>
-                        </form>
+    <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
+        <div class="container">
+            <form action="{{ route('filter.properties') }}" method="GET" class="row g-2">
+                <div class="col-md-10">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" name="keyword" class="form-control border-0 py-3" placeholder="Search Keyword">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select border-0 py-3" name="category_filter" id="category_filter">
+                                <option selected>Property Category</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 position-relative">
+                            <input id="location" name="location" type="text" list="location_datalist" class="form-control border-0 py-3" placeholder="Location">
+                            <datalist id="location_datalist">
+                                @php
+                                    $uniqueCities = $listings->unique('city');
+                                @endphp
+                                @foreach ($uniqueCities as $property)
+                                    <option value="{{ $property->city }}">{{ $property->city }}</option>
+                                @endforeach
+                            </datalist>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Search End -->
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-dark border-0 w-100 py-3">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Search End -->
                 <div class="container-xxl bg-white p-0">
                     <!-- Spinner Start -->
                     {{-- <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -107,12 +102,13 @@
                                 <button class="btn btn-primary me-2" id="rent-btn">For Rent</button>
                                 <button class="btn btn-outline-primary" id="sell-btn">For Sale</button>
                             </div> --}}
-                            <div class="row">
-                                <div class="col-12">
-                                    <h2>Places for rent</h2>
-                                </div>
-                                @foreach ($properties->where('listingType.name', 'rent')->take(4) as $property)
-                                <div class="col-lg-3 col-md-6 property-item wow fadeInUp" data-wow-delay="0.1s" data-listing-type="{{ $property->listingType->name }}">
+                            <div class="row" id="property-list">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2>Places for rent</h2>
+                                    </div>
+                                    @foreach ($properties->where('listingType.name', 'rent')->take(4) as $property)
+                                        <div class="col-lg-3 col-md-6 property-item" data-listing-type="{{ $property->listingType->name }}">
                                     <div class="property-item rounded overflow-hidden mb-4"> 
                                     <div class="position-relative overflow-hidden" style="height: 250px;"> 
                                         <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $property->category->name }}</div>
@@ -308,42 +304,37 @@
         e.preventDefault();
     }
 });
-</script>
-<script>
-$(document).ready(function() {
-    $('#category_filter').on('change', function() {
-        fetchFilteredProperties();
-    });
 
-    $('#search-button').on('click', function(e) {
-        e.preventDefault();
-        fetchFilteredProperties();
-    });
-
-    function fetchFilteredProperties() {
-        var category = $('#category_filter').val();
-        var location = $('#location').val();
-
-        $.ajax({
-            url: '{{ route("filter.properties") }}',
-            method: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                category: category,
-                location: location
-            },
-            success: function(response) {
-                $('#property-list').html(response);
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
+    $(document).ready(function() {
+        $('#category_filter').on('change', function() {
+            fetchFilteredProperties();
         });
-    }
-});
 
+        $('#search-button').on('click', function(e) {
+            e.preventDefault();
+            fetchFilteredProperties();
+        });
+
+        function fetchFilteredProperties() {
+            var category = $('#category_filter').val();
+            var location = $('#location').val();
+
+            $.ajax({
+                url: '{{ route("filter.properties") }}',
+                method: 'GET',
+                data: {
+                    category: category,
+                    location: location
+                },
+                success: function(response) {
+                    $('#property-list').html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    });
 </script>
 
 @endsection

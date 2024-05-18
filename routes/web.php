@@ -50,6 +50,8 @@ Route::get('/', [HomeController::class, 'get'])->name('index')->middleware('auth
 Route::middleware([Authenticate::class])->group(function () {
     // Route::get('/filtered', [FilterController::class, 'show'])->name('show');
     // Route::get('/filter/properties', [FilterController::class,'filterProperties'])->name('filter.properties');
+    Route::get('/filter-properties', [PropretyController::class, 'filterProperties'])->name('filter.properties');
+    // Route::get('/filter-properties', [HomeController::class, 'get'])->name('filter.properties');
 
     // Categories
     // Route::get('/categories/{category}', [FilterController::class, 'show'])->name('categories.show');
@@ -60,7 +62,7 @@ Route::middleware([Authenticate::class])->group(function () {
     // Properties
     Route::get('/properties', [PropretyController::class, 'get'])->name('properties.index');
     Route::get('/createproperties', [PropretyController::class, 'create'])->name('createproperties');
-    Route::get('/filter/properties', [PropretyController::class, 'get'])->name('filter.properties');
+    // Route::get('/filter/properties', [PropretyController::class, 'get'])->name('filter.properties');
     Route::get('/editproperties/{id}', [PropretyController::class, 'edit'])->name('editproperty');
     Route::get('/showproperty/{id}', [PropretyController::class, 'show'])->name('property.show');
     Route::post('/addproprety', [PropretyController::class, 'add'])->name('addproprety');
@@ -88,6 +90,7 @@ Route::middleware([Authenticate::class])->group(function () {
 
     Route::middleware([AdminMiddleware::class])->group(function () {
     //admin 
+    Route::resource('admin/tags', 'AdminTagController');
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/userslist', [AdminController::class, 'users'])->name('admin.userslist');
     Route::post('/admin/properties/{id}/validate', [AdminController::class, 'validateProperty'])->name('admin.validateProperty');

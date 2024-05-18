@@ -93,6 +93,14 @@
 
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="tags">Tags</label>
+                            <select multiple class="form-control" id="tags" name="tags[]">
+                                @foreach ($tags as $tag)
+                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">

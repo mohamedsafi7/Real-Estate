@@ -19,10 +19,14 @@ class Proprety extends Model
         'description',
         'category_id',
         'listing_type_id',
-        'user_id'
+        'user_id',
+        
     ];
     use HasFactory;
-
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
     public function category()
     {
         return $this->belongsTo(Category::class);
