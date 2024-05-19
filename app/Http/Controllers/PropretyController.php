@@ -22,6 +22,9 @@ class PropretyController extends Controller
         
         // Fetch all properties
         $properties = Proprety::query();
+
+        $listingTypes = ListingType::all();
+
     
         // Check if the 'validated' parameter exists in the request
         if ($request->has('validated')) {
@@ -60,7 +63,7 @@ class PropretyController extends Controller
         // Get unique cities from listings
         $uniqueCities = $listings->pluck('city')->unique();
     
-        return view('proprety.proprety', compact('properties', 'listings', 'categories', 'uniqueCities'));
+        return view('proprety.proprety', compact('properties', 'listings', 'categories', 'uniqueCities','listingTypes'));
     }
     
     
@@ -184,7 +187,11 @@ public function add(Request $request)
                 }
             });
         }
-    
+        if ($request->has('listing_type_id') && !empty($request->listing_type_id)) {
+            $query->where('listing_type_id', $request->listing_type_id);
+        }
+        $listingTypes = ListingType::all();
+
         // Fetch the filtered properties
         $properties = $query->get();
     
@@ -207,7 +214,7 @@ public function add(Request $request)
 
     
         // Redirect back to the properties view with filtered data
-        return view('proprety.proprety', compact('properties', 'categories', 'uniqueCities', 'tags'));
+        return view('proprety.proprety', compact('properties', 'categories', 'uniqueCities', 'tags','listingTypes'));
     }
     
 
@@ -215,6 +222,6 @@ public function add(Request $request)
     public function destroy($id){
         $property = Proprety::FindOrFail($id);
         $property->delete();
-        return redirect()->route('properties.index'); 
+    return redirect()->back();
     }
 }

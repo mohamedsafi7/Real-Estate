@@ -44,7 +44,7 @@
                     <p class="card-text"><strong>Beds:</strong> <i class="fa fa-bed text-primary me-2"></i>{{ $property->bedrooms }}</p>
                     <p class="card-text"><strong>Baths:</strong> <i class="fa fa-bath text-primary me-2"></i>{{ $property->bathrooms }}</p>
                     <p class="card-text"><strong>Description:</strong> <i class="fa fa-info-circle text-primary me-2"></i>{{ $property->description }}</p>
-
+{{-- 
                    <!-- Tags -->
                    <p class="card-text"><strong>Tags:</strong>
                         @if($property->tags)
@@ -59,7 +59,27 @@
                         @else
                             <span>No tags available</span>
                         @endif
-                    </p>
+                    </p> --}}
+                    <!-- Tags -->
+        <p class="card-text"><strong>Tags:</strong>
+            @if($property->tags)
+                @php
+                    $tagsArray = is_array($property->tags) ? $property->tags : json_decode($property->tags, true);
+                @endphp
+
+                @if(is_array($tagsArray))
+                    <ul>
+                        @foreach($tagsArray as $tag)
+                          <li>  {{ $tag }}</li>
+                        @endforeach
+                    </ul>
+                @else
+                    <span>No valid tags available</span>
+                @endif
+            @else
+                <span>No tags available</span>
+            @endif
+        </p>
 
    
                 </div>
@@ -71,7 +91,11 @@
             @if (!auth()->check() || auth()->user()->id != $property->owner->id)
                 <div class="card mb-4">
                     <div class="card-body text-center">
+                        @if ($property->owner->image)
                         <img class="img-fluid rounded-circle mb-3" src="{{ asset('storage/users/' . $property->owner->image) }}" alt="{{ $property->owner->name }}" style="width: 150px;">
+                        @else
+                            <img class="img-fluid rounded-circle mb-3" src="{{ asset('generic.jpg') }}" alt="Anonymous">
+                        @endif
                         <h4><strong>Owner:</strong> {{ $property->owner->name }}</h4>
                         {{-- @if ($property->reservation && $property->reservation->status == 'rejected')
                             <p>Email and phone number will be visible upon approval.</p>

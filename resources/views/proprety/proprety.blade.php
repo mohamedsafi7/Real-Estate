@@ -10,13 +10,10 @@
             <div class="col-md-10">
                 <div class="row g-2">
                     <div class="col-md-3">
-                        <input type="text" class="form-control border-0 py-3" placeholder="Search Keyword">
-                    </div>
-                    <div class="col-md-3">
                         <select class="form-select border-0 py-3" name="category_filter" id="category_filter">
-                            <option selected>Property Category</option>
+                            <option selected disabled>Property Category</option>
                             @foreach ($categories as $category)
-                                <option>{{ $category->name }}</option>
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -32,17 +29,26 @@
                     <div class="col-md-3">
                         <select class="form-select border-0 py-3" name="tags[]" id="tags" multiple>
                             <option disabled>Select Tags</option>
-          
-                            @foreach ($properties as $property)
-                                @if ($property->tagsArray)
-                                    @foreach ($property->tagsArray as $tag)
-                                        <option>{{ $tag }}</option>
-                                    @endforeach
-                                @endif
+                            @php
+                                $allTags = [];
+                                foreach ($properties as $property) {
+                                    if ($property->tagsArray) {
+                                        $allTags = array_merge($allTags, $property->tagsArray);
+                                    }
+                                }
+                                $uniqueTags = array_unique($allTags);
+                            @endphp
+                            @foreach ($uniqueTags as $tag)
+                                <option value="{{ $tag }}">{{ $tag }}</option>
                             @endforeach
-                            
-
-
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select border-0 py-3" name="listing_type_id" id="listing_type_id">
+                            <option selected disabled>Listing Type</option>
+                            @foreach ($listingTypes as $listingType)
+                                <option value="{{ $listingType->id }}">{{ $listingType->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -54,6 +60,7 @@
     </div>
 </div>
 <!-- Search End -->
+
 
 
         <!-- Filter Buttons -->

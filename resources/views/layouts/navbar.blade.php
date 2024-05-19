@@ -37,7 +37,9 @@
                             <div class="dropdown-menu rounded-0 m-0">
                                 @auth
                                     <a href="{{route('profile')}}" class="dropdown-item">{{ auth()->user()->name }}</a>
+                                    @if (!auth()->user()->isAdmin())
                                     <a href="{{route('reservations')}}" class="dropdown-item">Reservations</a>
+                                    @endif
                                     @if (auth()->user()->isAdmin())
                                         <a href="{{route('admin.index')}}" class="dropdown-item">Dashboard</a>
                                         <a href="{{route('admin.userslist')}}" class="dropdown-item">Users</a>

@@ -11,8 +11,11 @@ class ProfileController extends Controller
 {
     public function get (){
         $user = auth()->user();
-        $pubs = $user->properties;
-        return view('profile', compact('user','pubs'));
+        $pubs = $user->properties()->with(['listingType', 'category', 'images', 'reservations' => function ($query) {
+            $query->where('status', 'pending');
+        }])->get();
+    
+        return view('profile', compact('user', 'pubs'));
     }
     
     public function edit (string $id){
