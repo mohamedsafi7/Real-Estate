@@ -11,6 +11,27 @@ use App\Http\Controllers\FilterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PropretyController;
+use App\Http\Controllers\TestController;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\OwnerController;
+
+
+// Route::get('/test', function(){
+//     return view('test');
+// });
+
+Route::get('/translate', function () {
+    $lang = new GoogleTranslate('ar');
+
+    $lang->setSource('ar')->setTarget('ar');
+
+    $viewContent = file_get_contents(resource_path('views/test.blade.php'));
+
+    $translatedContent = $lang->translate($viewContent);
+
+    return $translatedContent;
+});
 
 // authentification
 Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
@@ -27,10 +48,13 @@ Route::get('/', [HomeController::class, 'get'])->name('index')->middleware('auth
 
 // Routes for Authenticated Users
 Route::middleware([Authenticate::class])->group(function () {
-    Route::get('/filtered', [FilterController::class, 'show'])->name('show');
+    // Route::get('/filtered', [FilterController::class, 'show'])->name('show');
+    // Route::get('/filter/properties', [FilterController::class,'filterProperties'])->name('filter.properties');
+    Route::get('/filter-properties', [PropretyController::class, 'filterProperties'])->name('filter.properties');
+    // Route::get('/filter-properties', [HomeController::class, 'get'])->name('filter.properties');
 
     // Categories
-    Route::get('/categories/{category}', [FilterController::class, 'show'])->name('categories.show');
+    // Route::get('/categories/{category}', [FilterController::class, 'show'])->name('categories.show');
     Route::get('/categories', [CategoryController::class, 'get'])->name('categories.index');
     Route::get('/createcategories', [CategoryController::class, 'create'])->name('createcategories');
     Route::post('/addcategory', [CategoryController::class, 'add'])->name('categories.add');
@@ -38,6 +62,7 @@ Route::middleware([Authenticate::class])->group(function () {
     // Properties
     Route::get('/properties', [PropretyController::class, 'get'])->name('properties.index');
     Route::get('/createproperties', [PropretyController::class, 'create'])->name('createproperties');
+    // Route::get('/filter/properties', [PropretyController::class, 'get'])->name('filter.properties');
     Route::get('/editproperties/{id}', [PropretyController::class, 'edit'])->name('editproperty');
     Route::get('/showproperty/{id}', [PropretyController::class, 'show'])->name('property.show');
     Route::post('/addproprety', [PropretyController::class, 'add'])->name('addproprety');
@@ -47,18 +72,34 @@ Route::middleware([Authenticate::class])->group(function () {
 
     
 
- // profile
- Route::get('/profile', [ProfileController::class, 'get'])->name('profile');
- Route::get('/editprofile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
- Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
- Route::middleware([AdminMiddleware::class])->group(function () {
+    // profile
+    Route::get('/profile', [ProfileController::class, 'get'])->name('profile');
+    Route::get('/editprofile/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/updateprofile/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
+    //Reservation
+    Route::post('/reservations/{property}', [ReservationController::class, 'store'])->name('reservations.store');
+
+    Route::get('/owner/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard');
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations');
+    Route::post('/reservations/{reservation}/approve', [OwnerController::class, 'approve'])->name('reservations.approve');
+    Route::post('/reservations/{reservation}/reject', [OwnerController::class, 'reject'])->name('reservations.reject');
+
+    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
+
+    Route::middleware([AdminMiddleware::class])->group(function () {
     //admin 
+    Route::resource('admin/tags', 'AdminTagController');
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/userslist', [AdminController::class, 'users'])->name('admin.userslist');
     Route::post('/admin/properties/{id}/validate', [AdminController::class, 'validateProperty'])->name('admin.validateProperty');
     Route::post('/admin/unvalidate-property/{id}/validate', [AdminController::class, 'unvalidateProperty'])->name('admin.unvalidateProperty');
+    Route::post('/admin/user/{id}/validate', [AdminController::class, 'validateUser'])->name('admin.validateUser');
+    Route::post('/admin/unvalidate-user/{id}/validate', [AdminController::class, 'unvalidateUser'])->name('admin.unvalidateUser');
 
     Route::delete('/admin/properties/{id}/delete', [AdminController::class, 'deleteProperty'])->name('admin.deleteProperty');
+    Route::delete('/admin/user/{id}/delete', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 });
 });
 

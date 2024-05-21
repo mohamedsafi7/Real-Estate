@@ -2,13 +2,24 @@
 
 @section('content')
     <div class="container">
-        <h1>Admin Panel - Table of Properties</h1>
+        <h1 class="mt-4">Admin Panel - Table of Properties</h1>
+
+<!-- Filter Buttons -->
+<div class="mb-4">
+    <a href="{{ route('admin.index', ['validated' => 1]) }}" class="btn btn-primary {{ Request::get('validated') == '1' ? 'active' : '' }}">Validated</a>
+    <a href="{{ route('admin.index', ['validated' => 0]) }}" class="btn btn-warning {{ Request::get('validated') == '0' ? 'active' : '' }}">Unvalidated</a>
+    <a href="{{ route('admin.index') }}" class="btn btn-secondary {{ Request::get('validated') == null ? 'active' : '' }}">All</a>
+</div>
+
+
         <table class="table">
             <thead>
                 <tr>
                     <th>Image</th>
                     <th>Name</th>
-                    <th>Address</th>
+                    <th>Owner</th>
+                    <th>Location</th>
+                    {{-- <th>status</th> --}}
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -21,7 +32,9 @@
                             @endif
                         </td>
                         <td>{{ $property->name }}</td>
-                        <td>{{ $property->address }}</td>
+                        <td>{{ $property->owner->name }} <p>{{ $property->owner->phone }}</p></td>
+                        <td>{{ $property->city }},  {{ $property->address }}</td>
+                        {{-- <td>{{ $property->validated }}</td> --}}
  
                         <td>
                             @if (!$property->validated)

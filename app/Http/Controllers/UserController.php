@@ -79,8 +79,11 @@ class UserController extends Controller
             }
             
             session(['authenticated' => true]);
-            
-            return redirect()->intended('/');
+            if (Auth::user()->isAdmin()) {
+                return redirect()->route('admin.index');
+            } else {
+                return redirect()->intended('/');
+            }
         } catch (\Throwable $th) {
             return redirect('/login')->with('error', $th->getMessage())->withInput();
         }

@@ -2,35 +2,142 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
+    <div class="row" enctype="multipart/form-data" id="property-list">
+<!-- Search Start -->
+<div class="container-fluid bg-primary mb-4 wow fadeIn mt-4" data-wow-delay="0.1s" style="padding: 35px;">
+    <div class="container">
+        <form action="{{ route('filter.properties') }}" method="GET" class="row g-2">
+            <div class="col-md-10">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <select class="form-select border-0 py-3" name="category_filter" id="category_filter">
+                            <option selected disabled>Property Category</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 position-relative">
+                        <input id="location" name="location_filter" type="text" list="location_datalist" class="form-control border-0 py-3" placeholder="Location">
+                        <datalist id="location_datalist">
+                            <option selected disabled>Location</option>
+                            @foreach ($uniqueCities as $item)
+                                <option>{{ is_object($item) ? $item->city : $item }}</option>
+                            @endforeach
+                        </datalist>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select border-0 py-3" name="tags[]" id="tags" multiple>
+                            <option disabled>Select Tags</option>
+                            @php
+                                $allTags = [];
+                                foreach ($properties as $property) {
+                                    if ($property->tagsArray) {
+                                        $allTags = array_merge($allTags, $property->tagsArray);
+                                    }
+                                }
+                                $uniqueTags = array_unique($allTags);
+                            @endphp
+                            @foreach ($uniqueTags as $tag)
+                                <option value="{{ $tag }}">{{ $tag }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select border-0 py-3" name="listing_type_id" id="listing_type_id">
+                            <option selected disabled>Listing Type</option>
+                            @foreach ($listingTypes as $listingType)
+                                <option value="{{ $listingType->id }}">{{ $listingType->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-dark border-0 w-100 py-3">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Search End -->
+
+
+
+        <!-- Filter Buttons -->
+        <div class="mb-4">
+            <a href="{{ route('properties.index', ['validated' => 1]) }}" class="btn btn-secondary {{ Request::get('listingType') == null ? 'active' : '' }}">All</a>
+            <a href="{{ route('properties.index', ['validated' => 1, 'listingType' => 'sell']) }}" class="btn btn-primary {{ Request::get('listingType') == 'sell' ? 'active' : '' }}">Sell</a>
+            <a href="{{ route('properties.index', ['validated' => 1, 'listingType' => 'rent']) }}" class="btn btn-warning {{ Request::get('listingType') == 'rent' ? 'active' : '' }}">Rent</a>
+        </div>
+
+        <!-- Display Properties -->
         @foreach ($properties as $property)
-        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="property-item rounded overflow-hidden  mt-4">
-                <div class="position-relative overflow-hidden"  style="height: 250px;">
+        <div class="col-lg-4 col-md-6 wow fadeInUp property-item" data-listing="{{ $property->listingType->name }}" data-category="{{ $property->category->name }}">
+            <div class="property-item rounded overflow-hidden mt-2">
+                <div class="position-relative overflow-hidden" style="height: 250px;">
+                    <!-- Display property type -->
                     @if ($property->listingType->name == 'sell')
-                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Sell</div>
+                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Sale</div>
                     @else
                     <div class="bg-warning rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">For Rent</div>
                     @endif
+
+                    <!-- Display property category -->
                     <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">{{ $property->category->name }}</div>
+
+                    <!-- Display property image -->
                     @if ($property->images->count() > 0)
-                        <a href=""><img class="img-fluid" style="height: 300px;" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
+                    <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}"><img class="img-fluid" style="height: 300px; width:500px;" src="{{ asset('storage/images/' . $property->images->first()->image_path) }}" alt=""></a>
                     @endif
                 </div>
+
+                <!-- Property details -->
                 <div class="p-4 pb-0">
                     <h5 class="text-primary mb-3">${{ $property->price }}</h5>
-                    <a class="d-block h5 mb-2" href="">{{ $property->name }}</a>
-                    <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->address }}</p>
+                    <a class="d-block h5 mb-2" href="{{ route('property.show', ['id' => $property->id]) }}">{{ $property->name }}</a>
+                    <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ $property->city }}</p>
                 </div>
+
+                <!-- Display property features -->
                 <div class="d-flex border-top">
-                    <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $property->size }} m&sup2;</small>
+                    <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ $property->size }} m²</small>
                     <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{ $property->bedrooms }} Bed</small>
                     <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>{{ $property->bathrooms }} Bath</small>
                 </div>
+
+                @if (Auth::user()->isAdmin())
+                <div class="mt-3 text-center">
+                    <form action="{{ route('admin.deleteProperty', ['id' => $property->id]) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+                @endif
             </div>
         </div>
         @endforeach
     </div>
 </div>
-@endsection
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $(".filter-btn").click(function() {
+        var filter = $(this).data("filter");
+        console.log("Filter clicked:", filter);
+
+        $(".property-item").each(function() {
+            var listingType = $(this).data("listing");
+            console.log("Property listing type:", listingType);
+
+            if (filter === "all" || filter === listingType) {
+                $(this).fadeIn();
+            } else {
+                $(this).fadeOut();
+            }
+        });
+    });
+});
+</script>
+@endsection

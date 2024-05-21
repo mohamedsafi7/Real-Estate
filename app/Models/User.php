@@ -19,6 +19,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
         'image'
     ];
@@ -58,6 +59,10 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        return $this->role === 'admin'; // Adjust this condition based on how you define admin users in your system
+        return $this->role === 'admin';
+    }
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
     }
 }
