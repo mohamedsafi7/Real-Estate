@@ -7,6 +7,7 @@ use App\Models\Proprety;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+
 class HomeController extends Controller
 {
     public function get(Request $request)

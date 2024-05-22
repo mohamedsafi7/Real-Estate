@@ -67,10 +67,6 @@ class PropretyController extends Controller
     }
     
     
-
-    
-    
-
     public function create()
 {
     $categories = Category::all();
@@ -217,7 +213,6 @@ public function add(Request $request)
         return view('proprety.proprety', compact('properties', 'categories', 'uniqueCities', 'tags','listingTypes'));
     }
     
-
 
     public function destroy($id){
         $property = Proprety::FindOrFail($id);
